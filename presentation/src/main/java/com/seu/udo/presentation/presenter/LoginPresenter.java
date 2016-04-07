@@ -66,6 +66,7 @@ public class LoginPresenter implements MvpPreseter<LoginView> {
 
         @Override
         public void onError(Throwable e) {
+            loginView.hideLoading();
             loginView.showError(e.getMessage());
         }
 

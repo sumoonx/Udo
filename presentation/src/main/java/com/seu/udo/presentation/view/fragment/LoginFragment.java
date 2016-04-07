@@ -7,11 +7,14 @@ package com.seu.udo.presentation.view.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.github.mrengineer13.snackbar.SnackBar;
@@ -39,10 +42,12 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
     @Bind(R.id.bt_login_wechat) FancyButton wechat_login_bt;
     @Bind(R.id.bt_login_facebook) FancyButton facebook_login_bt;
     @Bind(R.id.itv_loading) IconTextView iconTextView;
-
+    @Bind(R.id.login_fragment_layout) LinearLayout linearLayout;
     private SnackBar snackBar;
+    private View view;
 
-    View view;
+    private Handler handler;
+    private boolean isLoading;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -57,6 +62,9 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
         LogUtil.i("LoginComponent injected.");
 
         loginPresenter.attachView(this);
+
+        handler = new Handler(Looper.getMainLooper());
+        isLoading = false;
     }
 
     @Nullable
@@ -68,6 +76,7 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
 
         wechat_login_bt.setOnClickListener(this);
         facebook_login_bt.setOnClickListener(this);
+        linearLayout.setOnClickListener(this);
 
         hideLoading();
 
@@ -82,12 +91,21 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
 
     @Override
     public void showLoading() {
-        LogUtil.i("show loading...");
-        iconTextView.setVisibility(View.VISIBLE);
+        isLoading = true;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                LogUtil.i("show loading...");
+                if (isLoading) {
+                    iconTextView.setVisibility(View.VISIBLE);
+                }
+            }
+        }, 200);
     }
 
     @Override
     public void hideLoading() {
+        isLoading = false;
         LogUtil.i("hide loading...");
         iconTextView.setVisibility(View.INVISIBLE);
     }
