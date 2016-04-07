@@ -7,6 +7,7 @@ package com.seu.udo.presentation.view.fragment;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,6 +40,8 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
     @Bind(R.id.bt_login_facebook) FancyButton facebook_login_bt;
     @Bind(R.id.itv_loading) IconTextView iconTextView;
 
+    private SnackBar snackBar;
+
     View view;
 
     @Override
@@ -65,6 +68,7 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
 
         wechat_login_bt.setOnClickListener(this);
         facebook_login_bt.setOnClickListener(this);
+
         hideLoading();
 
         return view;
@@ -91,9 +95,10 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
     @Override
     public void showError(String message) {
         LogUtil.i(message);
-        new SnackBar.Builder(getActivity())
+        snackBar = new SnackBar.Builder(getActivity())
                 .withMessage(message)
                 .withDuration(SnackBar.SHORT_SNACK)
+                .withStyle(SnackBar.Style.INFO)
                 .show();
     }
 
@@ -115,6 +120,9 @@ public class LoginFragment extends BaseFragment implements LoginView, View.OnCli
                 LogUtil.i("login with facebook...");
                 loginPresenter.doLogin("admin", "123456");
                 break;
+        }
+        if (snackBar != null) {
+            snackBar.hide();
         }
     }
 }
