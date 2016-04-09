@@ -28,6 +28,13 @@ public class LoginActivity extends BaseActivity implements HasComponent<LoginCom
 
     private LoginComponent loginComponent;
 
+    /**
+     * Get a calling {@link Intent}, you should always use this {@link Intent}
+     * to start this {@link android.app.Activity}.
+     *
+     * @param context the context which is going to start this Activity.
+     * @return the Intent to start.
+     */
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, LoginActivity.class);
     }
@@ -58,6 +65,6 @@ public class LoginActivity extends BaseActivity implements HasComponent<LoginCom
                 .activityModule(getActivityModule())
                 .loginModule(new LoginModule())
                 .build();
-        LogUtil.i("LoginComponent created here.");
+        LogUtil.i("LoginComponent created here in the LoginActivity.");
     }
 }

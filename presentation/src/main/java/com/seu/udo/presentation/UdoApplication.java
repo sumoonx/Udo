@@ -54,6 +54,7 @@ public class UdoApplication extends Application {
     private void initializeLeakDetection() {
         if (BuildConfig.DEBUG) {
             LeakCanary.install(this);
+            LogUtil.i("LeakCanary installed.");
         }
     }
 
@@ -68,5 +69,6 @@ public class UdoApplication extends Application {
                 .with(new WeathericonsModule())
                 .with(new SimpleLineIconsModule())
                 .with(new IoniconsModule());
+        LogUtil.i("Iconify initialed.");
     }
 }

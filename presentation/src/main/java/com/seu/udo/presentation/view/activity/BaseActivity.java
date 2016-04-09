@@ -41,6 +41,7 @@ public abstract class BaseActivity extends Activity {
     protected void onDestroy() {
         super.onDestroy();
         ButterKnife.unbind(this);
+        LogUtil.i("ButterKnife unbind with the BaseActivity.");
     }
 
     /**
@@ -53,6 +54,7 @@ public abstract class BaseActivity extends Activity {
         FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
         fragmentTransaction.add(containerViewId, fragment);
         fragmentTransaction.commit();
+        LogUtil.i(fragment.getClass().getName() + " is added in the Activity.");
     }
 
     /**
@@ -70,9 +72,10 @@ public abstract class BaseActivity extends Activity {
 
     private void initializeInjector() {
         getApplicationComponent().inject(this);
-        LogUtil.i("ApplicationComponent injected.");
+        LogUtil.i("ApplicationComponent injected in the BaseActivity.");
         ButterKnife.bind(this);
+        LogUtil.i("ButterKnife bind with the BaseActivity.");
         activityModule = new ActivityModule(this);
-        LogUtil.i("activityModule created.");
+        LogUtil.i("ActivityModule created in the BaseActivity.");
     }
 }
