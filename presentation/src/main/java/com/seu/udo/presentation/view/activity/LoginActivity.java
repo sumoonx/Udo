@@ -47,6 +47,7 @@ public class LoginActivity extends BaseActivity implements HasComponent<LoginCom
 
         initializeInjector();
         addFragment(R.id.login_fragment_container, new LoginFragment());
+        LogUtil.i("LoginFragment added to the LoginActivity.");
     }
 
     @Override

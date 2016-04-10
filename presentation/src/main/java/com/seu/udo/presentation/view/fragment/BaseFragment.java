@@ -20,6 +20,9 @@ import javax.inject.Inject;
 import butterknife.ButterKnife;
 
 /**
+ * Base class for all {@link Fragment} in this app.
+ * You should always extend this class when you need a {@link Fragment}.
+ *
  * Author: Jeremy Xu on 2016/4/5 20:23
  * E-mail: jeremy_xm@163.com
  */

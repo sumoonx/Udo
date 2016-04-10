@@ -23,6 +23,11 @@ import butterknife.ButterKnife;
 import icepick.Icepick;
 
 /**
+ * Base class for all {@link Activity}s in this app.
+ * We introduce {@link Navigator} and {@link ActivityModule} here.
+ * You can use {@link ButterKnife} and Dagger2 in any sub-class.
+ * You can also add a {@link Fragment} using addFragment method.
+ *
  * Author: Jeremy Xu on 2016/3/29 21:27
  * E-mail: jeremy_xm@163.com
  */
