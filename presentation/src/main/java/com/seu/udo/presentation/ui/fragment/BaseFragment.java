@@ -3,21 +3,14 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view.fragment;
+package com.seu.udo.presentation.ui.fragment;
 
 import android.app.Fragment;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.seu.udo.presentation.internal.di.HasComponent;
 import com.seu.udo.presentation.navigation.Navigator;
 
 import javax.inject.Inject;
-
-import butterknife.ButterKnife;
 
 /**
  * Base class for all {@link Fragment} in this app.

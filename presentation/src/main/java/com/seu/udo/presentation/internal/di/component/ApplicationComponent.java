@@ -10,7 +10,7 @@ import com.seu.udo.domain.executor.PostExecutionThread;
 import com.seu.udo.domain.executor.ThreadExecutor;
 import com.seu.udo.domain.repository.UserRepository;
 import com.seu.udo.presentation.internal.di.module.ApplicationModule;
-import com.seu.udo.presentation.view.activity.BaseActivity;
+import com.seu.udo.presentation.ui.activity.BaseActivity;
 
 import javax.inject.Singleton;
 

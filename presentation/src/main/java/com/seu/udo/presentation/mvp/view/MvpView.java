@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view;
+package com.seu.udo.presentation.mvp.view;
 
 /**
  * Author: Jeremy Xu on 2016/4/5 21:02

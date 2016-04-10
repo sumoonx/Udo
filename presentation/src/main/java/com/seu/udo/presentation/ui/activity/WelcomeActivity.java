@@ -3,10 +3,8 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view.activity;
+package com.seu.udo.presentation.ui.activity;
 
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 
 /**

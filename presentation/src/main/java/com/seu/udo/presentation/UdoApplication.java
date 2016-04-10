@@ -69,6 +69,6 @@ public class UdoApplication extends Application {
                 .with(new WeathericonsModule())
                 .with(new SimpleLineIconsModule())
                 .with(new IoniconsModule());
-        LogUtil.i("Iconify initialed.");
+        LogUtil.i("Iconify initialized.");
     }
 }

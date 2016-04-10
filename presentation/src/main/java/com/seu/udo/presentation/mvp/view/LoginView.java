@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view;
+package com.seu.udo.presentation.mvp.view;
 
 /**
  * Author: Jeremy Xu on 2016/4/5 20:26
@@ -16,6 +16,8 @@ public interface LoginView extends MvpView{
     void hideLoading();
 
     void showError(String message);
+
+    void hideError();
 
     void showSuccess();
 }

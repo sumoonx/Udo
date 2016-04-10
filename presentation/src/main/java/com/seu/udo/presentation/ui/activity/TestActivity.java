@@ -3,7 +3,7 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view.activity;
+package com.seu.udo.presentation.ui.activity;
 
 import android.os.Bundle;
 import android.view.View;

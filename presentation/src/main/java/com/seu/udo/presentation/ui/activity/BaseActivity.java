@@ -3,13 +3,12 @@
  * All rights reserved.
  */
 
-package com.seu.udo.presentation.view.activity;
+package com.seu.udo.presentation.ui.activity;
 
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
-import android.support.v4.media.session.PlaybackStateCompat;
 
 import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.UdoApplication;
@@ -20,7 +19,6 @@ import com.seu.udo.presentation.navigation.Navigator;
 import javax.inject.Inject;
 
 import butterknife.ButterKnife;
-import icepick.Icepick;
 
 /**
  * Base class for all {@link Activity}s in this app.
@@ -45,8 +43,6 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        ButterKnife.unbind(this);
-        LogUtil.i("ButterKnife unbind with the BaseActivity.");
     }
 
     /**
@@ -78,8 +74,6 @@ public abstract class BaseActivity extends Activity {
     private void initializeInjector() {
         getApplicationComponent().inject(this);
         LogUtil.i("ApplicationComponent injected in the BaseActivity.");
-        ButterKnife.bind(this);
-        LogUtil.i("ButterKnife bind with the BaseActivity.");
         activityModule = new ActivityModule(this);
         LogUtil.i("ActivityModule created in the BaseActivity.");
     }

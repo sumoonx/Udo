@@ -8,9 +8,8 @@ package com.seu.udo.presentation.navigation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.seu.udo.presentation.view.activity.BaseActivity;
-import com.seu.udo.presentation.view.activity.LoginActivity;
-import com.seu.udo.presentation.view.activity.MainActivity;
+import com.seu.udo.presentation.ui.activity.LoginActivity;
+import com.seu.udo.presentation.ui.activity.MainActivity;
 
 import javax.inject.Inject;
 
