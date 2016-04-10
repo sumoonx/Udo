@@ -8,10 +8,13 @@ package com.seu.udo.presentation.ui.activity;
 import android.app.Activity;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.Window;
 
 import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.UdoApplication;
+import com.seu.udo.presentation.internal.di.component.ActivityComponent;
 import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.navigation.Navigator;
@@ -24,7 +27,9 @@ import butterknife.ButterKnife;
  * Base class for all {@link Activity}s in this app.
  * We introduce {@link Navigator} and {@link ActivityModule} here.
  * You can use {@link ButterKnife} and Dagger2 in any sub-class.
- * You can also add a {@link Fragment} using addFragment method.
+ *
+ * You must always override getLayout method to set your layout,
+ * otherwise the Activity will have nothing to display!
  *
  * Author: Jeremy Xu on 2016/3/29 21:27
  * E-mail: jeremy_xm@163.com
@@ -37,26 +42,24 @@ public abstract class BaseActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        setContentView(getLayout());
+
         initializeInjector();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        ButterKnife.unbind(this);
     }
 
     /**
-     * Add a {@link Fragment} to this activity's layout.
+     * Override this method to provide your own layout.
      *
-     * @param containerViewId The container view to where add the fragment.
-     * @param fragment The fragment to be added.
+     * @return layout resource id
      */
-    protected void addFragment(int containerViewId, Fragment fragment) {
-        FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-        fragmentTransaction.add(containerViewId, fragment);
-        fragmentTransaction.commit();
-        LogUtil.i(fragment.getClass().getName() + " is added in the Activity.");
-    }
+    protected abstract int getLayout();
 
     /**
      * Get the Main Application component for dependency injection
@@ -72,9 +75,8 @@ public abstract class BaseActivity extends Activity {
     }
 
     private void initializeInjector() {
+        ButterKnife.bind(this);
         getApplicationComponent().inject(this);
-        LogUtil.i("ApplicationComponent injected in the BaseActivity.");
         activityModule = new ActivityModule(this);
-        LogUtil.i("ActivityModule created in the BaseActivity.");
     }
 }

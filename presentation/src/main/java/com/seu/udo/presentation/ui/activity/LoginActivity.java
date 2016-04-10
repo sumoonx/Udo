@@ -54,8 +54,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.login_main);
 
         initializeInjector();
         initialLoginContainer();
@@ -67,6 +65,11 @@ public class LoginActivity extends BaseActivity {
 
         ButterKnife.unbind(this);
         LogUtil.i("ButterKnife unbind from the LoginActivity.");
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.login_main;
     }
 
     private void initializeInjector() {

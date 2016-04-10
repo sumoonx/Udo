@@ -26,7 +26,7 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.test);
+        setContentView(R.layout.main);
 
         test = (Button) findViewById(R.id.btn_test);
         test.setOnClickListener(this);
@@ -40,5 +40,10 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
                 ToastUtil.show(TestActivity.this, "I'm a Toast");
                 break;
         }
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.main;
     }
 }

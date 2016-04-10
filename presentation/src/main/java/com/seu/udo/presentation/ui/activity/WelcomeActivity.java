@@ -7,6 +7,8 @@ package com.seu.udo.presentation.ui.activity;
 
 import android.os.Bundle;
 
+import com.seu.udo.R;
+
 /**
  * Author: Jeremy Xu on 2016/4/5 20:01
  * E-mail: jeremy_xm@163.com
@@ -18,5 +20,10 @@ public class WelcomeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         navigator.toLogin(WelcomeActivity.this);
         finish();
+    }
+
+    @Override
+    protected int getLayout() {
+        return R.layout.main;
     }
 }

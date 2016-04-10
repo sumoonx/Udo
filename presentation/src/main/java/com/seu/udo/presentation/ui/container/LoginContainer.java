@@ -11,7 +11,6 @@ import com.github.mrengineer13.snackbar.SnackBar;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.seu.udo.R;
 import com.seu.udo.lib.utils.LogUtil;
-import com.seu.udo.lib.utils.ToastUtil;
 import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.mvp.presenter.LoginPresenter;
 import com.seu.udo.presentation.mvp.view.LoginView;
@@ -28,11 +27,19 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
+ * Implementation of {@link LoginView}.
+ * You can add this layout directly into yor layout xml file.
+ *
  * Author: Jeremy Xu on 2016/4/10 14:48
  * E-mail: jeremy_xm@163.com
  */
 public class LoginContainer extends LinearLayout implements LoginView {
 
+    /**
+     * The callback to communicate with the {@link Activity}.
+     * In some sense, it is much like a {@link android.view.View.OnClickListener}
+     * for a {@link android.widget.Button}.
+     */
     public interface LoginCallback {
         void onLoginSuccess();
     }
@@ -42,14 +49,11 @@ public class LoginContainer extends LinearLayout implements LoginView {
 
     @Inject LoginPresenter loginPresenter;
     @Inject Activity activity;
-    private Context context;
     private LoginCallback loginCallback;
 
     public LoginContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.login_container, this);
-
-        this.context = context;
     }
 
     @Override
@@ -64,6 +68,7 @@ public class LoginContainer extends LinearLayout implements LoginView {
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+
         ButterKnife.unbind(this);
         loginPresenter.detachView();
         LogUtil.i("LoginContainer detached from loginPresenter.");

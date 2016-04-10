@@ -14,6 +14,11 @@ import com.seu.udo.presentation.ui.activity.MainActivity;
 import javax.inject.Inject;
 
 /**
+ * Navigate through your application.
+ * You can register every {@link android.app.Activity}
+ * or {@link android.app.Service} in the manifest file,
+ * and wrap all the start method here.
+ *
  * Author: Jeremy Xu on 2016/3/29 21:28
  * E-mail: jeremy_xm@163.com
  */
