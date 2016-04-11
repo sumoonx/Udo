@@ -18,7 +18,7 @@ import com.seu.udo.lib.utils.ToastUtil;
  * Author: Jeremy Xu on 2016/4/5 16:22
  * E-mail: jeremy_xm@163.com
  */
-public class TestActivity extends BaseActivity implements View.OnClickListener {
+public class StudyDetailActivity extends BaseActivity implements View.OnClickListener {
 
     private Button test;
 
@@ -37,13 +37,13 @@ public class TestActivity extends BaseActivity implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.btn_test:
                 LogUtil.i("Test","show this");
-                ToastUtil.show(TestActivity.this, "I'm a Toast");
+                ToastUtil.show(StudyDetailActivity.this, "I'm a Toast");
                 break;
         }
     }
 
     @Override
     protected int getLayout() {
-        return R.layout.main;
+        return R.layout.study_detail_main;
     }
 }

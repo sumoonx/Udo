@@ -1,5 +1,8 @@
 package com.seu.udo.presentation.mvp.view;
 
+import com.seu.udo.presentation.mvp.model.StudyTimeModel;
+
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -10,11 +13,7 @@ public interface StudyDetailView extends MvpView {
 
     void renderRank(int rank);
 
-    void showStudyTime();
+    void renderStudyTimes(Collection<StudyTimeModel> studyTimeModels);
 
-    void hideStudyTime();
-
-    void showAppTime();
-
-    void hideAppTime();
+    void renderAppUsage();
 }

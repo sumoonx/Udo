@@ -87,6 +87,8 @@ dependencies {
     compile 'com.github.medyo:fancybuttons:1.7'
     compile 'com.github.mrengineer13:snackbar:1.2.0'
     compile 'com.github.johnpersano:supertoasts:1.3.4@aar'
+    compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
+
 
     //iconify
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
