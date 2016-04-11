@@ -212,6 +212,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         float px = 5 * (metrics.densityDpi / 160f);
         pieDataSet.setSelectionShift(px);
+        pieDataSet.setDrawValues(false);
 
         PieData pieData = new PieData(xValues, pieDataSet);
 
