@@ -18,7 +18,8 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        navigator.toLogin(WelcomeActivity.this);
+        //navigator.toLogin(WelcomeActivity.this);
+        navigator.toStudyDetail(WelcomeActivity.this);
         finish();
     }
 

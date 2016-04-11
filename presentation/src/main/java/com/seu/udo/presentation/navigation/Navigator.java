@@ -10,6 +10,7 @@ import android.content.Intent;
 
 import com.seu.udo.presentation.ui.activity.LoginActivity;
 import com.seu.udo.presentation.ui.activity.MainActivity;
+import com.seu.udo.presentation.ui.activity.StudyDetailActivity;
 
 import javax.inject.Inject;
 
@@ -37,6 +38,13 @@ public class Navigator {
     public void toMain(Context context) {
         if (context != null) {
             Intent intent = MainActivity.getCallingIntent(context);
+            context.startActivity(intent);
+        }
+    }
+
+    public void toStudyDetail(Context context) {
+        if (context != null) {
+            Intent intent = StudyDetailActivity.getCallingIntent(context);
             context.startActivity(intent);
         }
     }

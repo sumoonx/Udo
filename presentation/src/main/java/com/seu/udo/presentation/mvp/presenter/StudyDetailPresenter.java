@@ -1,7 +1,11 @@
 package com.seu.udo.presentation.mvp.presenter;
 
 import com.seu.udo.presentation.mvp.mapper.StudyTimeModelMapper;
+import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -28,5 +32,16 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     @Override
     public void detachView() {
         studyDetailView = null;
+    }
+
+    public void getAppUsages() {
+        List<AppUsageModel> usageModels = new ArrayList<>();
+        usageModels.add(new AppUsageModel("微信", 5));
+        usageModels.add(new AppUsageModel("微信", 10));
+        usageModels.add(new AppUsageModel("微信", 15));
+        usageModels.add(new AppUsageModel("微信", 20));
+        usageModels.add(new AppUsageModel("微信", 20));
+        usageModels.add(new AppUsageModel("微信", 30));
+        studyDetailView.renderAppUsages(usageModels);
     }
 }

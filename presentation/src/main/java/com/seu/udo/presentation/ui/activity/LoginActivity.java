@@ -62,9 +62,6 @@ public class LoginActivity extends BaseActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
-        ButterKnife.unbind(this);
-        LogUtil.i("ButterKnife unbind from the LoginActivity.");
     }
 
     @Override
@@ -73,9 +70,6 @@ public class LoginActivity extends BaseActivity {
     }
 
     private void initializeInjector() {
-        ButterKnife.bind(this);
-        LogUtil.i("ButterKnife bind to the LoginActivity.");
-
         loginComponent = DaggerLoginComponent.builder()
                 .applicationComponent(getApplicationComponent())
                 .activityModule(getActivityModule())

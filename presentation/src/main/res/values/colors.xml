@@ -3,4 +3,11 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
+
+    <color name="pc_study_detail_0">#000FFF</color>
+    <color name="pc_study_detail_1">#FFF000</color>
+    <color name="pc_study_detail_2">#00FF00</color>
+    <color name="pc_study_detail_3">#0000FF</color>
+    <color name="pc_study_detail_4">#FF0000</color>
+    <color name="pc_study_detail_5">#F0F00F</color>
 </resources>
