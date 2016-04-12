@@ -173,6 +173,9 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         lineDataSet.setColor(Color.WHITE);
         lineDataSet.setCircleColor(Color.WHITE);
         lineDataSet.setHighLightColor(Color.YELLOW);
+        lineDataSet.setHighlightEnabled(true);
+        lineDataSet.setDrawHorizontalHighlightIndicator(false);
+        lineDataSet.setDrawVerticalHighlightIndicator(false);
         lineDataSet.setDrawCircleHole(true);
         lineDataSet.setDrawCircles(true);
         lineDataSet.setDrawValues(false);
