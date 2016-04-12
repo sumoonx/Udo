@@ -139,16 +139,14 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 String daySelected = lineX.get(e.getXIndex());
-                lineChart.highlightValue(e.getXIndex(), dataSetIndex);
+                highlightAt(e.getXIndex(), dataSetIndex);
                 studyDetailPresenter.getRank(daySelected);
                 studyDetailPresenter.getAppUsage(daySelected);
             }
 
             @Override
             public void onNothingSelected() {
-                String daySelected = lineX.get(lineX.size() - 1);
-                studyDetailPresenter.getRank(daySelected);
-                studyDetailPresenter.getAppUsage(daySelected);
+                remainHighlight();
             }
         });
 
@@ -244,5 +242,18 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
         PieData pieData = new PieData(xValues, pieDataSet);
         return pieData;
+    }
+
+    private int xIndex = 6;
+    private int dataSetIndex = 6;
+
+    private void highlightAt(int xIndex, int dataSetIndex) {
+        this.xIndex = xIndex;
+        this.dataSetIndex = dataSetIndex;
+        lineChart.highlightValue(xIndex, dataSetIndex);
+    }
+
+    private void remainHighlight() {
+        lineChart.highlightValue(xIndex, dataSetIndex);
     }
 }
