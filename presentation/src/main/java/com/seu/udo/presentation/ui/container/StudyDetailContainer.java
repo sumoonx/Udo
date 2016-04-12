@@ -3,11 +3,13 @@ package com.seu.udo.presentation.ui.container;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.Entry;
@@ -15,6 +17,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.highlight.ChartHighlighter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -24,6 +27,8 @@ import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 import com.seu.udo.presentation.mvp.presenter.StudyDetailPresenter;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
+import com.seu.udo.presentation.ui.component.HourFormatter;
+import com.seu.udo.presentation.ui.component.StudyDetailMarkerView;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +38,6 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * Author: Jeremy Xu on 2016/4/11 10:17
@@ -50,6 +54,7 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
     Activity activity;
     @Inject
     StudyDetailPresenter studyDetailPresenter;
+    private Context context;
 
     @Bind(R.id.tv_study_rank)
     TextView rankTextView;
@@ -62,7 +67,10 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.study_detail_container, this);
 
+        this.context = context;
         ButterKnife.bind(this);
+        initializeLineChart();
+        initializePieChart();
     }
 
     @Override
@@ -81,8 +89,6 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
     public void inject(StudyComponent studyComponent) {
         studyComponent.inject(this);
         studyDetailPresenter.attachView(this);
-        initializeLineChart();
-        initializePieChart();
         studyDetailPresenter.getStudyTimes();
     }
 
@@ -112,31 +118,28 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
     }
 
     private void initializeLineChart() {
-        lineChart.setDrawBorders(false);
-
-        lineChart.setDescription("");
-        //lineChart.setNoDataTextDescription("You need to provide data");
-
+        lineChart.setDrawBorders(false);    //dont draw border
+        lineChart.setDescription("");       //hide description
+        lineChart.getLegend().setEnabled(false);    //hide legend
         lineChart.setDrawGridBackground(false);
-        lineChart.setGridBackgroundColor(Color.WHITE & 0x70FFFFFF);
+        lineChart.setBackgroundColor(Color.GREEN);
 
         lineChart.setTouchEnabled(true);
         lineChart.setDragEnabled(false);
         lineChart.setScaleEnabled(false);
         lineChart.setPinchZoom(false);
-
-        lineChart.setBackgroundColor(Color.GREEN);
-
         lineChart.setHighlightPerTapEnabled(true);
 
-        lineChart.getLegend().setEnabled(false);
+        StudyDetailMarkerView markerView = new StudyDetailMarkerView(context, R.layout.study_detail_marker_view);
+        lineChart.setMarkerView(markerView);
 
-        lineChart.setEnabled(false);
-
+        //lineChart.setHighlighter(new ChartHighlighter());
+        lineChart.setSelected(true);
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
                 String daySelected = lineX.get(e.getXIndex());
+                lineChart.highlightValue(e.getXIndex(), dataSetIndex);
                 studyDetailPresenter.getRank(daySelected);
                 studyDetailPresenter.getAppUsage(daySelected);
             }
@@ -148,6 +151,8 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
                 studyDetailPresenter.getAppUsage(daySelected);
             }
         });
+
+        lineChart.setEnabled(false);        //hide self before data
     }
 
     private List<String> lineX;
@@ -167,7 +172,7 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         lineDataSet.setLineWidth(1.75f);
         lineDataSet.setColor(Color.WHITE);
         lineDataSet.setCircleColor(Color.WHITE);
-        lineDataSet.setHighLightColor(Color.WHITE);
+        lineDataSet.setHighLightColor(Color.YELLOW);
         lineDataSet.setDrawCircleHole(true);
         lineDataSet.setDrawCircles(true);
         lineDataSet.setDrawValues(false);
@@ -176,7 +181,8 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         lineDataSets.add(lineDataSet);
 
         LineData lineData = new LineData(lineX, lineDataSets);
-
+        lineData.setHighlightEnabled(true);
+        lineData.setValueFormatter(new HourFormatter());
         return lineData;
     }
 
@@ -184,36 +190,30 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
     private void initializePieChart() {
 
-        pieColors = getPieColors();
-
-        pieChart.setDescription("");
-
+        pieChart.setDescription("");    //hide description
         pieChart.setDrawCenterText(false);
-
         pieChart.setDrawHoleEnabled(false);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.setDrawSliceText(true);
 
         pieChart.setRotationEnabled(false);
-
         pieChart.setRotationAngle(0);
 
         pieChart.setUsePercentValues(true);
 
-        pieChart.getLegend().setEnabled(false);
-
-        pieChart.setDrawSliceText(true);
-
         pieChart.setEnabled(false);
+
+        pieColors = getPieColors();
     }
 
     private List<Integer> getPieColors() {
         List<Integer> pieColors = new ArrayList<>();
-        //TODO:fix getColor.
-        pieColors.add(activity.getColor(R.color.pc_study_detail_0));
-        pieColors.add(activity.getColor(R.color.pc_study_detail_1));
-        pieColors.add(activity.getColor(R.color.pc_study_detail_2));
-        pieColors.add(activity.getColor(R.color.pc_study_detail_3));
-        pieColors.add(activity.getColor(R.color.pc_study_detail_4));
-        pieColors.add(activity.getColor(R.color.pc_study_detail_5));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_0));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_1));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_2));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_3));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_4));
+        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_5));
         return pieColors;
     }
 
@@ -233,17 +233,10 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
         PieDataSet pieDataSet = new PieDataSet(yValues, "App time consume");
         pieDataSet.setSliceSpace(0f);
+        pieDataSet.setColors(pieColors.subList(0, StudyTimeModel.BRIEF_SIZE));
 
-        ArrayList<Integer> colors = new ArrayList<>();
-        for (int i = 0; i < appUsageModels.size(); i++) {
-            colors.add(pieColors.get(i));
-        }
-        pieDataSet.setColors(colors);
-
-//        DisplayMetrics metrics = getResources().getDisplayMetrics();
-//        float px = 5 * (metrics.densityDpi / 160f);
         pieDataSet.setSelectionShift(0);
-        pieDataSet.setDrawValues(false);
+        pieDataSet.setDrawValues(false);        //hide percent values
         pieDataSet.setValueTextSize(12f);
 
         PieData pieData = new PieData(xValues, pieDataSet);
