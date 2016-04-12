@@ -2,11 +2,13 @@ package com.seu.udo.presentation.ui.container;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -42,9 +44,11 @@ import butterknife.OnClick;
  */
 public class StudyDetailContainer extends LinearLayout implements StudyDetailView {
 
+    //TODO:use context instead.
     @Inject Activity activity;
     @Inject StudyDetailPresenter studyDetailPresenter;
 
+    @Bind(R.id.tv_study_rank) TextView rankTextView;
     @Bind(R.id.lc_study_rank) LineChart lineChart;
     @Bind(R.id.pc_app_while_study) PieChart pieChart;
 
@@ -75,12 +79,14 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
 
     @Override
     public void renderRank(int rank) {
-
+        rankTextView.setText(String.valueOf(rank));
     }
 
     @Override
-    public void renderStudyTimes(Collection<StudyTimeModel> studyTimeModels) {
-
+    public void renderStudyTimes(List<StudyTimeModel> studyTimeModels) {
+        lineChart.setData(getLineData(studyTimeModels));
+        lineChart.setEnabled(true);
+        lineChart.animateX(2000);
     }
 
     @Override
@@ -88,51 +94,43 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         PieData pieData = getPieData(appUsageModels);
 
         pieChart.setData(pieData);
+        pieChart.setEnabled(true);
         pieChart.animateXY(2000, 1500);
     }
 
     private void initializeLineChart() {
         lineChart.setDrawBorders(false);
 
-        lineChart.setDescription("This is a LineChart");
-        lineChart.setNoDataTextDescription("You need to provide data");
+        //lineChart.setDescription("This is a LineChart");
+        //lineChart.setNoDataTextDescription("You need to provide data");
 
-        lineChart.setDrawGridBackground(true);
+        lineChart.setDrawGridBackground(false);
         lineChart.setGridBackgroundColor(Color.WHITE & 0x70FFFFFF);
 
         lineChart.setTouchEnabled(true);
-
-        lineChart.setDragEnabled(true);
-        lineChart.setScaleEnabled(true);
-
+        lineChart.setDragEnabled(false);
+        lineChart.setScaleEnabled(false);
         lineChart.setPinchZoom(false);
 
         lineChart.setBackgroundColor(Color.GREEN);
 
-        lineChart.setData(getLineData(7, 100));
+        lineChart.getLegend().setEnabled(false);
 
-        Legend legend = lineChart.getLegend();
-
-        legend.setForm(Legend.LegendForm.CIRCLE);
-        legend.setFormSize(6f);
-        legend.setTextColor(Color.WHITE);
-
-        lineChart.animateX(2000);
+        lineChart.setEnabled(false);
     }
 
-    private LineData getLineData(int count, float range) {
-        ArrayList<String> xValues = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            xValues.add("" + i);
+    private LineData getLineData(List<StudyTimeModel> studyTimeModels) {
+        List<String> xValues = new ArrayList<>();
+        for (StudyTimeModel studyTimeModel : studyTimeModels) {
+            xValues.add(studyTimeModel.getDay());
         }
 
         ArrayList<Entry> yValues = new ArrayList<>();
-        for (int i = 0; i < count; i++) {
-            float value = (float) (Math.random() * range) + 3;
-            yValues.add(new Entry(value, i));
+        for (int i = 0; i < studyTimeModels.size(); i++) {
+            yValues.add(new Entry(studyTimeModels.get(i).getHour(), i));
         }
 
-        LineDataSet lineDataSet = new LineDataSet(yValues, "test line chart");
+        LineDataSet lineDataSet = new LineDataSet(yValues, "this is study time");
         lineDataSet.setLineWidth(1.75f);
         lineDataSet.setColor(Color.WHITE);
         lineDataSet.setCircleColor(Color.WHITE);
@@ -168,7 +166,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
 
         pieChart.setDrawSliceText(true);
 
-        //pieChart.setData(getPieData());
+        pieChart.setEnabled(false);
     }
 
     private List<Integer> getPieColors() {
@@ -222,7 +220,8 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
 
     @OnClick(R.id.test_btn)
     protected void showChart() {
-        initializeLineChart();
+        studyDetailPresenter.getRank();
+        studyDetailPresenter.getStudyTimes();
         studyDetailPresenter.getAppUsages();
     }
 }

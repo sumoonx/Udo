@@ -8,7 +8,8 @@
         android:id="@+id/test_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="show line chart"/>
+        android:text="Refresh"
+        android:textAllCaps="false"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -21,8 +22,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
-        android:textSize="20sp"
-        android:text="1998"/>
+        android:textSize="20sp"/>
 
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lc_study_rank"

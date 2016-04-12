@@ -2,6 +2,7 @@ package com.seu.udo.presentation.mvp.presenter;
 
 import com.seu.udo.presentation.mvp.mapper.StudyTimeModelMapper;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
+import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
 
 import java.util.ArrayList;
@@ -32,6 +33,22 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     @Override
     public void detachView() {
         studyDetailView = null;
+    }
+
+    public void getRank() {
+        studyDetailView.renderRank((int)(Math.random() * 2000));
+    }
+
+    public void getStudyTimes() {
+        List<StudyTimeModel> studyTimeModels = new ArrayList<>();
+        studyTimeModels.add(new StudyTimeModel("周三", (float) Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周四", (float)Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周五", (float)Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周六", (float)Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周日", (float)Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周一", (float)Math.random() * 5));
+        studyTimeModels.add(new StudyTimeModel("周二", (float)Math.random() * 5));
+        studyDetailView.renderStudyTimes(studyTimeModels);
     }
 
     public void getAppUsages() {

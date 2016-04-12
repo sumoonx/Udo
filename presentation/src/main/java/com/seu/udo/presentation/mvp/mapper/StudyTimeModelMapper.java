@@ -28,10 +28,7 @@ public class StudyTimeModelMapper {
         if (studyTime == null) {
             throw new IllegalArgumentException("Cannot transform a null value");
         }
-        StudyTimeModel studyTimeModel = new StudyTimeModel(studyTime.getDay());
-        studyTimeModel.setHour(studyTime.getHour());
-        studyTimeModel.setHour(studyTime.getHour());
-        studyTimeModel.setSecond(studyTime.getSecond());
+        StudyTimeModel studyTimeModel = new StudyTimeModel(studyTime.getDay(), studyTime.getHour());
 
         return studyTimeModel;
     }

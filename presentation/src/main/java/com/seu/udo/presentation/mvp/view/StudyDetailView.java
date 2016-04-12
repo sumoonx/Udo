@@ -14,7 +14,7 @@ public interface StudyDetailView extends MvpView {
 
     void renderRank(int rank);
 
-    void renderStudyTimes(Collection<StudyTimeModel> studyTimeModels);
+    void renderStudyTimes(List<StudyTimeModel> studyTimeModels);
 
     void renderAppUsages(List<AppUsageModel> appUsageModels);
 }
