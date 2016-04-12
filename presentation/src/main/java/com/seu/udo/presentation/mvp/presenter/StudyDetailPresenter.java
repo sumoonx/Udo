@@ -47,6 +47,8 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     public void getStudyTimes() {
         studyTimeModels = generateStudyTimes();
         studyDetailView.renderStudyTimes(studyTimeModels);
+        studyDetailView.renderRank(studyTimeModels.get(studyTimeModels.size() - 1).getRank());
+        studyDetailView.renderAppUsages(studyTimeModels.get(studyTimeModels.size() - 1).getAppUsageBrief());
     }
 
     public void getAppUsage(String day) {
@@ -72,7 +74,7 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
         studyTimeModels.add(new StudyTimeModel("周六", getRandomRank(), generateAppUsages()));
         studyTimeModels.add(new StudyTimeModel("周日", getRandomRank(), generateAppUsages()));
         studyTimeModels.add(new StudyTimeModel("周一", getRandomRank(), generateAppUsages()));
-        studyTimeModels.add(new StudyTimeModel("周二", getRandomRank(), generateAppUsages()));
+        studyTimeModels.add(new StudyTimeModel("周二", 0, generateAppUsages()));
         return studyTimeModels;
     }
 

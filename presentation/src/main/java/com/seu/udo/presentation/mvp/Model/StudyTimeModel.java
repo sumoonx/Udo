@@ -10,7 +10,7 @@ import java.util.List;
  */
 public class StudyTimeModel {
 
-    private static final int BRIEF_SIZE = 6;
+    public static final int BRIEF_SIZE = 6;
 
     private final String day;
     private int rank;

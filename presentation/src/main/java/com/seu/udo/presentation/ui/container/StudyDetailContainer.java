@@ -41,23 +41,33 @@ import butterknife.OnClick;
  */
 public class StudyDetailContainer extends FrameLayout implements StudyDetailView {
 
-    //TODO:use context instead.
-    @Inject Activity activity;
-    @Inject StudyDetailPresenter studyDetailPresenter;
+    private static final int LINE_CHART_ANITIME = 2000;
+    private static final int PIE_CHART_ANITIME_X = 1500;
+    private static final int PIE_CHART_ANITIME_Y = 1500;
 
-    @Bind(R.id.tv_study_rank) TextView rankTextView;
-    @Bind(R.id.lc_study_rank) LineChart lineChart;
-    @Bind(R.id.pc_app_while_study) PieChart pieChart;
+    //TODO:use context instead.
+    @Inject
+    Activity activity;
+    @Inject
+    StudyDetailPresenter studyDetailPresenter;
+
+    @Bind(R.id.tv_study_rank)
+    TextView rankTextView;
+    @Bind(R.id.lc_study_rank)
+    LineChart lineChart;
+    @Bind(R.id.pc_app_while_study)
+    PieChart pieChart;
 
     public StudyDetailContainer(Context context, AttributeSet attrs) {
         super(context, attrs);
         LayoutInflater.from(context).inflate(R.layout.study_detail_container, this);
+
+        ButterKnife.bind(this);
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        ButterKnife.bind(this);
         //setVisibility(INVISIBLE);
     }
 
@@ -71,21 +81,25 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
     public void inject(StudyComponent studyComponent) {
         studyComponent.inject(this);
         studyDetailPresenter.attachView(this);
-        studyDetailPresenter.getStudyTimes();
         initializeLineChart();
         initializePieChart();
+        studyDetailPresenter.getStudyTimes();
     }
 
     @Override
     public void renderRank(int rank) {
-        rankTextView.setText(String.valueOf(rank));
+        if (rank != 0) {
+            rankTextView.setText(String.valueOf(rank));
+        } else {
+            rankTextView.setText("尚未产生");
+        }
     }
 
     @Override
     public void renderStudyTimes(List<StudyTimeModel> studyTimeModels) {
         lineChart.setData(getLineData(studyTimeModels));
         lineChart.setEnabled(true);
-        lineChart.animateX(2000);
+        lineChart.animateX(LINE_CHART_ANITIME);
     }
 
     @Override
@@ -94,7 +108,7 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
         pieChart.setData(pieData);
         pieChart.setEnabled(true);
-        pieChart.animateXY(2000, 1500);
+        pieChart.animateXY(PIE_CHART_ANITIME_X, PIE_CHART_ANITIME_Y);
     }
 
     private void initializeLineChart() {
@@ -228,18 +242,11 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
 //        DisplayMetrics metrics = getResources().getDisplayMetrics();
 //        float px = 5 * (metrics.densityDpi / 160f);
-//        pieDataSet.setSelectionShift(px);
+        pieDataSet.setSelectionShift(0);
         pieDataSet.setDrawValues(false);
         pieDataSet.setValueTextSize(12f);
 
         PieData pieData = new PieData(xValues, pieDataSet);
         return pieData;
-    }
-
-    @OnClick(R.id.test_btn)
-    protected void showChart() {
-        studyDetailPresenter.getRank("周二");
-        studyDetailPresenter.getStudyTimes();
-        studyDetailPresenter.getAppUsage("周一");
     }
 }
