@@ -2,23 +2,22 @@ package com.seu.udo.presentation.ui.container;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.seu.udo.R;
 import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
@@ -27,8 +26,6 @@ import com.seu.udo.presentation.mvp.presenter.StudyDetailPresenter;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -42,7 +39,7 @@ import butterknife.OnClick;
  * Author: Jeremy Xu on 2016/4/11 10:17
  * E-mail: jeremy_xm@163.com
  */
-public class StudyDetailContainer extends LinearLayout implements StudyDetailView {
+public class StudyDetailContainer extends FrameLayout implements StudyDetailView {
 
     //TODO:use context instead.
     @Inject Activity activity;
@@ -61,6 +58,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
+        //setVisibility(INVISIBLE);
     }
 
     @Override
@@ -73,6 +71,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
     public void inject(StudyComponent studyComponent) {
         studyComponent.inject(this);
         studyDetailPresenter.attachView(this);
+        studyDetailPresenter.getStudyTimes();
         initializeLineChart();
         initializePieChart();
     }
@@ -101,7 +100,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
     private void initializeLineChart() {
         lineChart.setDrawBorders(false);
 
-        //lineChart.setDescription("This is a LineChart");
+        lineChart.setDescription("");
         //lineChart.setNoDataTextDescription("You need to provide data");
 
         lineChart.setDrawGridBackground(false);
@@ -114,20 +113,40 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
 
         lineChart.setBackgroundColor(Color.GREEN);
 
+        lineChart.setHighlightPerTapEnabled(true);
+
         lineChart.getLegend().setEnabled(false);
 
         lineChart.setEnabled(false);
+
+        lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
+                String daySelected = lineX.get(e.getXIndex());
+                studyDetailPresenter.getRank(daySelected);
+                studyDetailPresenter.getAppUsage(daySelected);
+            }
+
+            @Override
+            public void onNothingSelected() {
+                String daySelected = lineX.get(lineX.size() - 1);
+                studyDetailPresenter.getRank(daySelected);
+                studyDetailPresenter.getAppUsage(daySelected);
+            }
+        });
     }
 
+    private List<String> lineX;
+
     private LineData getLineData(List<StudyTimeModel> studyTimeModels) {
-        List<String> xValues = new ArrayList<>();
+        lineX = new ArrayList<>();
         for (StudyTimeModel studyTimeModel : studyTimeModels) {
-            xValues.add(studyTimeModel.getDay());
+            lineX.add(studyTimeModel.getDay());
         }
 
         ArrayList<Entry> yValues = new ArrayList<>();
         for (int i = 0; i < studyTimeModels.size(); i++) {
-            yValues.add(new Entry(studyTimeModels.get(i).getHour(), i));
+            yValues.add(new Entry(studyTimeModels.get(i).getTotalHour(), i));
         }
 
         LineDataSet lineDataSet = new LineDataSet(yValues, "this is study time");
@@ -135,11 +154,14 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         lineDataSet.setColor(Color.WHITE);
         lineDataSet.setCircleColor(Color.WHITE);
         lineDataSet.setHighLightColor(Color.WHITE);
+        lineDataSet.setDrawCircleHole(true);
+        lineDataSet.setDrawCircles(true);
+        lineDataSet.setDrawValues(false);
 
         ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
         lineDataSets.add(lineDataSet);
 
-        LineData lineData = new LineData(xValues, lineDataSets);
+        LineData lineData = new LineData(lineX, lineDataSets);
 
         return lineData;
     }
@@ -171,6 +193,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
 
     private List<Integer> getPieColors() {
         List<Integer> pieColors = new ArrayList<>();
+        //TODO:fix getColor.
         pieColors.add(activity.getColor(R.color.pc_study_detail_0));
         pieColors.add(activity.getColor(R.color.pc_study_detail_1));
         pieColors.add(activity.getColor(R.color.pc_study_detail_2));
@@ -181,9 +204,6 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
     }
 
     private PieData getPieData(List<AppUsageModel> appUsageModels) {
-        if (pieColors.size() < appUsageModels.size()) {
-            throw new IllegalArgumentException("too  many AppUsageModels");
-        }
 
         List<String> xValues = new ArrayList<>();
         Collections.sort(appUsageModels);
@@ -193,9 +213,8 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         }
 
         List<Entry> yValues = new ArrayList<>();
-
         for (int i = 0; i < appUsageModels.size(); i++) {
-            yValues.add(new Entry(appUsageModels.get(i).getDuration(), i));
+            yValues.add(new Entry(appUsageModels.get(i).getHour(), i));
         }
 
         PieDataSet pieDataSet = new PieDataSet(yValues, "App time consume");
@@ -207,21 +226,20 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         }
         pieDataSet.setColors(colors);
 
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        float px = 5 * (metrics.densityDpi / 160f);
-        pieDataSet.setSelectionShift(px);
+//        DisplayMetrics metrics = getResources().getDisplayMetrics();
+//        float px = 5 * (metrics.densityDpi / 160f);
+//        pieDataSet.setSelectionShift(px);
         pieDataSet.setDrawValues(false);
         pieDataSet.setValueTextSize(12f);
 
         PieData pieData = new PieData(xValues, pieDataSet);
-
         return pieData;
     }
 
     @OnClick(R.id.test_btn)
     protected void showChart() {
-        studyDetailPresenter.getRank();
+        studyDetailPresenter.getRank("周二");
         studyDetailPresenter.getStudyTimes();
-        studyDetailPresenter.getAppUsages();
+        studyDetailPresenter.getAppUsage("周一");
     }
 }

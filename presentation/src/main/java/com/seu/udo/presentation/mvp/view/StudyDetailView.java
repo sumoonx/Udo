@@ -3,7 +3,6 @@ package com.seu.udo.presentation.mvp.view;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 
-import java.util.Collection;
 import java.util.List;
 
 /**

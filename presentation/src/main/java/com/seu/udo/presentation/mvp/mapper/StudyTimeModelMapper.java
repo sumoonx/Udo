@@ -25,26 +25,12 @@ public class StudyTimeModelMapper {
      * @return {@link StudyTimeModel}.
      */
     public StudyTimeModel transform(StudyTime studyTime) {
-        if (studyTime == null) {
-            throw new IllegalArgumentException("Cannot transform a null value");
-        }
-        StudyTimeModel studyTimeModel = new StudyTimeModel(studyTime.getDay(), studyTime.getHour());
-
-        return studyTimeModel;
+        //TODO:
+        return null;
     }
 
     public Collection<StudyTimeModel> transform(Collection<StudyTime> studyTimes) {
-        Collection<StudyTimeModel> studyTimeModels;
-
-        if (studyTimes != null && !studyTimes.isEmpty()) {
-            studyTimeModels = new ArrayList<>();
-            for (StudyTime studyTime : studyTimes) {
-                studyTimeModels.add(transform(studyTime));
-            }
-        } else {
-            studyTimeModels = Collections.emptyList();
-        }
-
-        return studyTimeModels;
+        //TODO:
+        return null;
     }
 }
