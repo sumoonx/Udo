@@ -37,11 +37,11 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     public void getAppUsages() {
         List<AppUsageModel> usageModels = new ArrayList<>();
         usageModels.add(new AppUsageModel("微信", 5));
-        usageModels.add(new AppUsageModel("微信", 10));
-        usageModels.add(new AppUsageModel("微信", 15));
-        usageModels.add(new AppUsageModel("微信", 20));
-        usageModels.add(new AppUsageModel("微信", 20));
-        usageModels.add(new AppUsageModel("微信", 30));
+        usageModels.add(new AppUsageModel("微博", 10));
+        usageModels.add(new AppUsageModel("知乎", 15));
+        usageModels.add(new AppUsageModel("有道", 20));
+        usageModels.add(new AppUsageModel("邮件", 20));
+        usageModels.add(new AppUsageModel("优酷", 30));
         studyDetailView.renderAppUsages(usageModels);
     }
 }

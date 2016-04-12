@@ -88,7 +88,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         PieData pieData = getPieData(appUsageModels);
 
         pieChart.setData(pieData);
-        pieChart.animateXY(2000, 2000);
+        pieChart.animateXY(2000, 1500);
     }
 
     private void initializeLineChart() {
@@ -213,6 +213,7 @@ public class StudyDetailContainer extends LinearLayout implements StudyDetailVie
         float px = 5 * (metrics.densityDpi / 160f);
         pieDataSet.setSelectionShift(px);
         pieDataSet.setDrawValues(false);
+        pieDataSet.setValueTextSize(12f);
 
         PieData pieData = new PieData(xValues, pieDataSet);
 
