@@ -8,7 +8,7 @@ import java.util.List;
  * Author: Jeremy Xu on 2016/4/11 10:30
  * E-mail: jeremy_xm@163.com
  */
-public class StudyTimeModel {
+public class StudyTimeModel implements Comparable {
 
     public static final int BRIEF_SIZE = 6;
 
@@ -124,6 +124,12 @@ public class StudyTimeModel {
         stringBuilder.append("**************************\n");
 
         return stringBuilder.toString();
+    }
+
+    @Override
+    public int compareTo(Object another) {
+        float hour = ((StudyTimeModel) another).getTotalHour();
+        return hour < totalHour ? -1 : (hour == totalHour ? 0 : 1);
     }
 
     private AppUsageModel findAppUsageModelByName(String target) {

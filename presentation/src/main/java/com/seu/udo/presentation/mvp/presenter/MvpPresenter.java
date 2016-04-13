@@ -13,7 +13,8 @@ import com.seu.udo.presentation.mvp.view.MvpView;
  */
 public interface MvpPresenter<V extends MvpView> {
 
-    void attachView(V v);
+    void takeView(V v);
 
-    void detachView();
+    void dropView();
+
 }

@@ -18,37 +18,39 @@ import com.joanzapata.iconify.fonts.SimpleLineIconsModule;
 import com.joanzapata.iconify.fonts.TypiconsModule;
 import com.joanzapata.iconify.fonts.WeathericonsModule;
 import com.seu.udo.lib.utils.LogUtil;
+import com.seu.udo.presentation.mvp.DaggerService;
 import com.squareup.leakcanary.LeakCanary;
 import com.seu.udo.BuildConfig;
 import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
-import com.seu.udo.presentation.internal.di.component.DaggerApplicationComponent;
 import com.seu.udo.presentation.internal.di.module.ApplicationModule;
+
+import mortar.MortarScope;
 
 /**
  * Author: Jeremy Xu on 2016/3/29 21:20
  * E-mail: jeremy_xm@163.com
  */
 public class UdoApplication extends Application {
-    private ApplicationComponent applicationComponent;
+    private MortarScope rootScope;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        initializeInjector();
         initializeLeakDetection();
         initialIconify();
+
+        LogUtil.i("Udo app onCreated.");
     }
 
-    public ApplicationComponent getApplicationComponent() {
-        return applicationComponent;
-    }
-
-    private void initializeInjector() {
-        applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
-        LogUtil.i("applicationComponent is created.");
+    @Override
+    public Object getSystemService(String name) {
+        if (rootScope == null) {
+            rootScope = MortarScope.buildRootScope()
+                    .withService(DaggerService.SERVICE_NAME, DaggerService.createComponent(ApplicationComponent.class, new ApplicationModule(this)))
+                    .build(getScopeName());
+        }
+        return rootScope.hasService(name) ? rootScope.getService(name) : super.getSystemService(name);
     }
 
     private void initializeLeakDetection() {
@@ -70,5 +72,9 @@ public class UdoApplication extends Application {
                 .with(new SimpleLineIconsModule())
                 .with(new IoniconsModule());
         LogUtil.i("Iconify initialized.");
+    }
+
+    private String getScopeName() {
+        return "Root";
     }
 }

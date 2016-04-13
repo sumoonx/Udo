@@ -1,23 +1,20 @@
-package com.seu.udo.presentation.ui.container;
+package com.seu.udo.presentation.ui.screen;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.highlight.ChartHighlighter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -27,6 +24,7 @@ import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 import com.seu.udo.presentation.mvp.presenter.StudyDetailPresenter;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
+import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.ui.component.HourFormatter;
 import com.seu.udo.presentation.ui.component.StudyDetailMarkerView;
 
@@ -37,61 +35,69 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 /**
  * Author: Jeremy Xu on 2016/4/11 10:17
  * E-mail: jeremy_xm@163.com
  */
-public class StudyDetailContainer extends FrameLayout implements StudyDetailView {
+public class StudyDetailScreen extends Screen implements StudyDetailView {
 
-    private static final int LINE_CHART_ANITIME = 2000;
+    private static final int LINE_CHART_ANITIME = 1500;
     private static final int PIE_CHART_ANITIME_X = 1500;
     private static final int PIE_CHART_ANITIME_Y = 1500;
 
-    //TODO:use context instead.
-    @Inject
-    Activity activity;
-    @Inject
-    StudyDetailPresenter studyDetailPresenter;
+    private static final int GRID_COLOR = Color.WHITE;
+    private static final float GRID_WIDTH = 1f;
+    private static final int LINE_COLOR = Color.WHITE;
+    private static final float LINE_WIDTH = 2f;
+
+    @Inject StudyDetailPresenter studyDetailPresenter;
     private Context context;
 
-    @Bind(R.id.tv_study_rank)
-    TextView rankTextView;
-    @Bind(R.id.lc_study_rank)
-    LineChart lineChart;
-    @Bind(R.id.pc_app_while_study)
-    PieChart pieChart;
+    @Bind(R.id.tv_study_rank) TextView rankTextView;
+    @Bind(R.id.lc_study_rank) LineChart lineChart;
+    @Bind(R.id.pc_app_while_study) PieChart pieChart;
 
-    public StudyDetailContainer(Context context, AttributeSet attrs) {
+    public StudyDetailScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.study_detail_container, this);
-
         this.context = context;
-        ButterKnife.bind(this);
-        initializeLineChart();
-        initializePieChart();
+        DaggerService.<StudyComponent>getDaggerComponent(context).inject(this);
     }
 
+    public StudyDetailScreen(Context context) {
+        super(context);
+        this.context = context;
+        DaggerService.<StudyComponent>getDaggerComponent(context).inject(this);
+    }
+
+    /**
+     * Lifecycle.
+     */
     @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-        //setVisibility(INVISIBLE);
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+
+        studyDetailPresenter.takeView(this);
+        setupLineChart();
+        setupPieChart();
+        studyDetailPresenter.getStudyTimes();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        ButterKnife.unbind(this);
-        studyDetailPresenter.detachView();
+        studyDetailPresenter.dropView();
     }
 
-    public void inject(StudyComponent studyComponent) {
-        studyComponent.inject(this);
-        studyDetailPresenter.attachView(this);
-        studyDetailPresenter.getStudyTimes();
+    @Override
+    protected int getLayout() {
+        return R.layout.study_detail_screen;
     }
 
+    /**
+     * Implementation of StudyDetailView.
+     * @param rank the rank to render
+     */
     @Override
     public void renderRank(int rank) {
         if (rank != 0) {
@@ -104,6 +110,14 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
     @Override
     public void renderStudyTimes(List<StudyTimeModel> studyTimeModels) {
         lineChart.setData(getLineData(studyTimeModels));
+        highlightLast();
+
+        //fix y-axis size
+        float min = Collections.min(studyTimeModels).getTotalHour();
+        float max = Collections.max(studyTimeModels).getTotalHour();
+        YAxis yAxis = lineChart.getAxisLeft();
+        yAxis.calcMinMax(min, max);
+
         lineChart.setEnabled(true);
         lineChart.animateX(LINE_CHART_ANITIME);
     }
@@ -117,13 +131,25 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         pieChart.animateXY(PIE_CHART_ANITIME_X, PIE_CHART_ANITIME_Y);
     }
 
-    private void initializeLineChart() {
-        lineChart.setDrawBorders(false);    //dont draw border
+    /**
+     * Local methods.
+     */
+    private void setupLineChart() {
+        lineChart.setDrawBorders(true);    //hide border
+        lineChart.setBorderColor(GRID_COLOR);
+        lineChart.setBorderWidth(GRID_WIDTH);
+        lineChart.setDrawGridBackground(false);
         lineChart.setDescription("");       //hide description
         lineChart.getLegend().setEnabled(false);    //hide legend
-        lineChart.setDrawGridBackground(false);
-        lineChart.setBackgroundColor(Color.GREEN);
 
+        //setup x-axis
+        setupXAxis(lineChart.getXAxis());
+
+        //setup y-axis
+        setupYAxis(lineChart.getAxisLeft());
+        setupYAxis(lineChart.getAxisRight());
+
+        //setup interaction
         lineChart.setTouchEnabled(true);
         lineChart.setDragEnabled(false);
         lineChart.setScaleEnabled(false);
@@ -133,12 +159,11 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         StudyDetailMarkerView markerView = new StudyDetailMarkerView(context, R.layout.study_detail_marker_view);
         lineChart.setMarkerView(markerView);
 
-        //lineChart.setHighlighter(new ChartHighlighter());
         lineChart.setSelected(true);
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry e, int dataSetIndex, Highlight h) {
-                String daySelected = lineX.get(e.getXIndex());
+                String daySelected = lineXString.get(e.getXIndex());
                 highlightAt(e.getXIndex(), dataSetIndex);
                 studyDetailPresenter.getRank(daySelected);
                 studyDetailPresenter.getAppUsage(daySelected);
@@ -153,12 +178,38 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         lineChart.setEnabled(false);        //hide self before data
     }
 
-    private List<String> lineX;
+    private void setupXAxis(XAxis xAxis) {
+        xAxis.setDrawLabels(true);
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawLimitLinesBehindData(true);
+
+        xAxis.setDrawGridLines(true);
+        xAxis.setGridColor(GRID_COLOR);
+        xAxis.setGridLineWidth(GRID_WIDTH);
+
+        xAxis.setDrawAxisLine(false);
+        xAxis.setAxisLineColor(GRID_COLOR);
+        xAxis.setAxisLineWidth(GRID_WIDTH);
+        xAxis.setAxisMinValue(-0.5f);
+        xAxis.setAxisMaxValue(6.5f);
+        xAxis.setAvoidFirstLastClipping(false);
+    }
+
+    private void setupYAxis(YAxis yAxis) {
+        yAxis.setDrawLabels(false);
+        yAxis.setDrawTopYLabelEntry(false);
+
+        yAxis.setDrawGridLines(true);
+        yAxis.setGridColor(GRID_COLOR);
+        yAxis.setGridLineWidth(GRID_WIDTH);
+    }
+
+    private List<String> lineXString;
 
     private LineData getLineData(List<StudyTimeModel> studyTimeModels) {
-        lineX = new ArrayList<>();
+        lineXString = new ArrayList<>();
         for (StudyTimeModel studyTimeModel : studyTimeModels) {
-            lineX.add(studyTimeModel.getDay());
+            lineXString.add(studyTimeModel.getDay());
         }
 
         ArrayList<Entry> yValues = new ArrayList<>();
@@ -167,8 +218,8 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         }
 
         LineDataSet lineDataSet = new LineDataSet(yValues, "this is study time");
-        lineDataSet.setLineWidth(1.75f);
-        lineDataSet.setColor(Color.WHITE);
+        lineDataSet.setColor(LINE_COLOR);
+        lineDataSet.setLineWidth(LINE_WIDTH);
         lineDataSet.setCircleColor(Color.WHITE);
         lineDataSet.setHighLightColor(Color.YELLOW);
         lineDataSet.setHighlightEnabled(true);
@@ -181,7 +232,7 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
         lineDataSets.add(lineDataSet);
 
-        LineData lineData = new LineData(lineX, lineDataSets);
+        LineData lineData = new LineData(lineXString, lineDataSets);
         lineData.setHighlightEnabled(true);
         lineData.setValueFormatter(new HourFormatter());
         return lineData;
@@ -189,7 +240,7 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
     private List<Integer> pieColors;
 
-    private void initializePieChart() {
+    private void setupPieChart() {
 
         pieChart.setDescription("");    //hide description
         pieChart.setDrawCenterText(false);
@@ -234,6 +285,9 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
         PieDataSet pieDataSet = new PieDataSet(yValues, "App time consume");
         pieDataSet.setSliceSpace(0f);
+        if (pieColors == null) {
+            pieColors = getPieColors();
+        }
         pieDataSet.setColors(pieColors.subList(0, StudyTimeModel.BRIEF_SIZE));
 
         pieDataSet.setSelectionShift(0);
@@ -244,8 +298,8 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
         return pieData;
     }
 
-    private int xIndex = 6;
-    private int dataSetIndex = 6;
+    private int xIndex;
+    private int dataSetIndex;
 
     private void highlightAt(int xIndex, int dataSetIndex) {
         this.xIndex = xIndex;
@@ -255,5 +309,12 @@ public class StudyDetailContainer extends FrameLayout implements StudyDetailView
 
     private void remainHighlight() {
         lineChart.highlightValue(xIndex, dataSetIndex);
+    }
+
+    private void highlightLast() {
+        ILineDataSet lineDataSet = lineChart.getLineData().getDataSets().get(0);
+        xIndex = lineDataSet.getEntryCount() - 1;
+        dataSetIndex = 0;
+        remainHighlight();
     }
 }

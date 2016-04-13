@@ -41,12 +41,12 @@ public class LoginPresenter implements MvpPresenter<LoginView> {
     }
 
     @Override
-    public void attachView(LoginView view) {
+    public void takeView(LoginView view) {
         loginView = view;
     }
 
     @Override
-    public void detachView() {
+    public void dropView() {
         loginView = null;
         doLoginUseCase.unsubscribe();
     }

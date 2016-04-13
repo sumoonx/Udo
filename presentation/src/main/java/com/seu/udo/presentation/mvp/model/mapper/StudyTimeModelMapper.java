@@ -1,11 +1,9 @@
-package com.seu.udo.presentation.mvp.mapper;
+package com.seu.udo.presentation.mvp.model.mapper;
 
 import com.seu.udo.domain.bean.StudyTime;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import javax.inject.Inject;
 

@@ -7,6 +7,7 @@ package com.seu.udo.presentation.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.seu.udo.R;
 
@@ -15,6 +16,13 @@ import com.seu.udo.R;
  * E-mail: jeremy_xm@163.com
  */
 public class MainActivity extends BaseActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        navigator.toStudyDetail(this);
+        finish();
+    }
 
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, MainActivity.class);

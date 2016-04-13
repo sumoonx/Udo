@@ -1,11 +1,9 @@
-package com.seu.udo.presentation.ui.container;
+package com.seu.udo.presentation.ui.screen;
 
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.LinearLayout;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.joanzapata.iconify.widget.IconTextView;
@@ -14,13 +12,13 @@ import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.mvp.presenter.LoginPresenter;
 import com.seu.udo.presentation.mvp.view.LoginView;
+import com.seu.udo.presentation.mvp.DaggerService;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -33,7 +31,7 @@ import rx.functions.Action1;
  * Author: Jeremy Xu on 2016/4/10 14:48
  * E-mail: jeremy_xm@163.com
  */
-public class LoginContainer extends LinearLayout implements LoginView {
+public class LoginScreen extends Screen implements LoginView {
 
     /**
      * The callback to communicate with the {@link Activity}.
@@ -51,40 +49,31 @@ public class LoginContainer extends LinearLayout implements LoginView {
     @Inject Activity activity;
     private LoginCallback loginCallback;
 
-    public LoginContainer(Context context, AttributeSet attrs) {
+    public LoginScreen(Context context, AttributeSet attrs) {
         super(context, attrs);
-        LayoutInflater.from(context).inflate(R.layout.login_container, this);
+        initialView(context);
+    }
+
+    public LoginScreen(Context context) {
+        super(context);
+        initialView(context);
     }
 
     @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
-
-        ButterKnife.bind(this);
-        hideError();
-        hideLoading();
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        loginPresenter.takeView(this);
     }
 
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-
-        ButterKnife.unbind(this);
-        loginPresenter.detachView();
-        LogUtil.i("LoginContainer detached from loginPresenter.");
+        loginPresenter.dropView();
     }
 
-    public void inject(LoginComponent loginComponent) {
-        loginComponent.inject(this);
-        loginPresenter.attachView(this);
-        LogUtil.i("LoginContainer attached to loginPresenter.");
-
-        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                hideError();
-            }
-        });
+    @Override
+    protected int getLayout() {
+        return R.layout.login_screen;
     }
 
     public void setLoginCallback(LoginCallback loginCallback) {
@@ -154,5 +143,18 @@ public class LoginContainer extends LinearLayout implements LoginView {
     protected void loginWithFacebook() {
         LogUtil.i("Login with Facebook.");
         loginPresenter.doLogin("admin", "123456");
+    }
+
+    private void initialView(Context context) {
+        DaggerService.<LoginComponent>getDaggerComponent(context).inject(this);
+        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                hideError();
+            }
+        });
+
+        hideError();
+        hideLoading();
     }
 }

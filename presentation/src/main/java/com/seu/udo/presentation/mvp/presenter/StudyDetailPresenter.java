@@ -1,8 +1,7 @@
 package com.seu.udo.presentation.mvp.presenter;
 
-import android.test.suitebuilder.annotation.Suppress;
-
-import com.seu.udo.presentation.mvp.mapper.StudyTimeModelMapper;
+import com.seu.udo.lib.utils.LogUtil;
+import com.seu.udo.presentation.mvp.model.mapper.StudyTimeModelMapper;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 import com.seu.udo.presentation.mvp.view.StudyDetailView;
@@ -29,13 +28,13 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     }
 
     @Override
-    public void attachView(StudyDetailView studyDetailView) {
+    public void takeView(StudyDetailView studyDetailView) {
         this.studyDetailView = studyDetailView;
         generateAppUsages();
     }
 
     @Override
-    public void detachView() {
+    public void dropView() {
         studyDetailView = null;
     }
 
@@ -46,6 +45,7 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
 
     public void getStudyTimes() {
         studyTimeModels = generateStudyTimes();
+        LogUtil.ai(studyTimeModels.toString());
         studyDetailView.renderStudyTimes(studyTimeModels);
         studyDetailView.renderRank(studyTimeModels.get(studyTimeModels.size() - 1).getRank());
         studyDetailView.renderAppUsages(studyTimeModels.get(studyTimeModels.size() - 1).getAppUsageBrief());

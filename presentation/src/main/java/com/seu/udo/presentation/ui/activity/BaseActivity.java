@@ -6,17 +6,12 @@
 package com.seu.udo.presentation.ui.activity;
 
 import android.app.Activity;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.Window;
 
-import com.seu.udo.lib.utils.LogUtil;
-import com.seu.udo.presentation.UdoApplication;
-import com.seu.udo.presentation.internal.di.component.ActivityComponent;
 import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
+import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.navigation.Navigator;
 
 import javax.inject.Inject;
@@ -37,15 +32,14 @@ import butterknife.ButterKnife;
 public abstract class BaseActivity extends Activity {
     @Inject Navigator navigator;
 
-    private ActivityModule activityModule;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(getLayout());
 
-        initializeInjector();
+        ButterKnife.bind(this);
+        DaggerService.<ApplicationComponent>getDaggerComponent(getApplicationContext()).inject(this);
     }
 
     @Override
@@ -66,17 +60,4 @@ public abstract class BaseActivity extends Activity {
      *
      * @return A {@link ApplicationComponent}
      */
-    protected ApplicationComponent getApplicationComponent() {
-        return ((UdoApplication) getApplication()).getApplicationComponent();
-    }
-
-    protected ActivityModule getActivityModule() {
-        return activityModule;
-    }
-
-    private void initializeInjector() {
-        ButterKnife.bind(this);
-        getApplicationComponent().inject(this);
-        activityModule = new ActivityModule(this);
-    }
 }
