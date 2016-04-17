@@ -17,7 +17,7 @@ import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.internal.di.module.LoginModule;
 import com.seu.udo.presentation.mvp.DaggerService;
-import com.seu.udo.presentation.ui.screen.LoginScreen;
+import com.seu.udo.presentation.ui.view.LoginView;
 
 import butterknife.Bind;
 import mortar.MortarScope;
@@ -28,7 +28,7 @@ import mortar.bundler.BundleServiceRunner;
  * E-mail: jeremy_xm@163.com
  */
 public class LoginActivity extends BaseActivity {
-    private LoginScreen loginContainer;
+    private LoginView loginContainer;
 
     @Bind(R.id.login_container) FrameLayout linearLayout;
 
@@ -93,10 +93,10 @@ public class LoginActivity extends BaseActivity {
 
     private void initialLoginContainer() {
         //loginContainer.inject(loginComponent);
-        loginContainer = new LoginScreen(this);
+        loginContainer = new LoginView(this);
         linearLayout.addView(loginContainer);
         LogUtil.ai("addView loginContainer");
-        loginContainer.setLoginCallback(new LoginScreen.LoginCallback() {
+        loginContainer.setLoginCallback(new LoginView.LoginCallback() {
             @Override
             public void onLoginSuccess() {
                 navigator.toMain(LoginActivity.this);

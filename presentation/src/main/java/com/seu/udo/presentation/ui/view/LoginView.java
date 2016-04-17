@@ -1,4 +1,4 @@
-package com.seu.udo.presentation.ui.screen;
+package com.seu.udo.presentation.ui.view;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,7 +11,7 @@ import com.seu.udo.R;
 import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.mvp.presenter.LoginPresenter;
-import com.seu.udo.presentation.mvp.view.LoginView;
+import com.seu.udo.presentation.mvp.view.LoginMvpView;
 import com.seu.udo.presentation.mvp.DaggerService;
 
 import java.util.concurrent.TimeUnit;
@@ -25,13 +25,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
- * Implementation of {@link LoginView}.
+ * Implementation of {@link LoginMvpView}.
  * You can add this layout directly into yor layout xml file.
  *
  * Author: Jeremy Xu on 2016/4/10 14:48
  * E-mail: jeremy_xm@163.com
  */
-public class LoginScreen extends Screen implements LoginView {
+public class LoginView extends BaseView implements LoginMvpView {
 
     /**
      * The callback to communicate with the {@link Activity}.
@@ -49,12 +49,12 @@ public class LoginScreen extends Screen implements LoginView {
     @Inject Activity activity;
     private LoginCallback loginCallback;
 
-    public LoginScreen(Context context, AttributeSet attrs) {
+    public LoginView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialView(context);
     }
 
-    public LoginScreen(Context context) {
+    public LoginView(Context context) {
         super(context);
         initialView(context);
     }

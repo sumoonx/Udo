@@ -15,9 +15,13 @@ import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.mvp.DaggerService;
-import com.seu.udo.presentation.ui.screen.StudyDetailScreen;
+import com.seu.udo.presentation.ui.activity.parceler.BasicKeyParceler;
+import com.seu.udo.presentation.ui.screen.StudyScreen;
+import com.seu.udo.presentation.ui.view.StudyDetailView;
+import com.seu.udo.presentation.ui.activity.dispatcher.StudyDispatcher;
 
 import butterknife.Bind;
+import flow.Flow;
 import mortar.MortarScope;
 import mortar.bundler.BundleServiceRunner;
 
@@ -27,9 +31,9 @@ import mortar.bundler.BundleServiceRunner;
  */
 public class StudyActivity extends BaseActivity {
 
-    @Bind(R.id.study_container) FrameLayout container;
+    @Bind(R.id.study_frame) FrameLayout container;
 
-    private StudyDetailScreen studyDetailContainer;
+    private StudyDetailView studyDetailContainer;
 
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, StudyActivity.class);
@@ -39,7 +43,7 @@ public class StudyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerService.<StudyComponent>getDaggerComponent(this);
-        initialStudyDetailContainer();
+        //initialStudyDetailContainer();
     }
 
     @Override
@@ -59,13 +63,25 @@ public class StudyActivity extends BaseActivity {
     }
 
     @Override
+    protected void attachBaseContext(Context newBase) {
+        newBase = Flow.configure(newBase, this)
+                .dispatcher(new StudyDispatcher(this))
+                .defaultKey(new StudyScreen())
+                .keyParceler(new BasicKeyParceler())
+                .install();
+        super.attachBaseContext(newBase);
+    }
+
+    @Override
     protected int getLayout() {
         return R.layout.study;
     }
 
-    private void initialStudyDetailContainer() {
-        studyDetailContainer = new StudyDetailScreen(this);
-        container.addView(studyDetailContainer);
+    @Override
+    public void onBackPressed() {
+        if (!Flow.get(this).goBack()) {
+            super.onBackPressed();
+        }
     }
 
     private String getScopeName() {

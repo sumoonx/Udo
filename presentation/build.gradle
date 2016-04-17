@@ -90,6 +90,8 @@ dependencies {
     compile 'com.github.PhilJay:MPAndroidChart:v2.2.4'
     compile 'com.skyfishjy.ripplebackground:library:1.0.1'
     compile 'com.squareup.mortar:mortar:0.20'
+    compile 'com.squareup.flow:flow:1.0.0-alpha'
+    compile 'com.squareup.flow:flow:1.0.0-alpha'
 
     //iconify
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)

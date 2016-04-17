@@ -9,7 +9,7 @@ package com.seu.udo.presentation.mvp.view;
  * Author: Jeremy Xu on 2016/4/5 20:26
  * E-mail: jeremy_xm@163.com
  */
-public interface LoginView extends MvpView{
+public interface LoginMvpView extends MvpView{
 
     void showLoading();
 

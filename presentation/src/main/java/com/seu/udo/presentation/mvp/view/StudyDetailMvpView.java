@@ -9,7 +9,7 @@ import java.util.List;
  * Author: Jeremy Xu on 2016/4/10 13:54
  * E-mail: jeremy_xm@163.com
  */
-public interface StudyDetailView extends MvpView {
+public interface StudyDetailMvpView extends MvpView {
 
     void renderRank(int rank);
 

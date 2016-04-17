@@ -1,4 +1,4 @@
-package com.seu.udo.presentation.ui.screen;
+package com.seu.udo.presentation.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -13,15 +13,15 @@ import butterknife.ButterKnife;
  * Author: Jeremy Xu on 2016/4/13 16:14
  * E-mail: jeremy_xm@163.com
  */
-public abstract class Screen extends FrameLayout {
+public abstract class BaseView extends FrameLayout {
     private MvpPresenter presenter;
 
-    public Screen(Context context, AttributeSet attrs) {
+    public BaseView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public Screen(Context context) {
+    public BaseView(Context context) {
         super(context);
         init(context);
     }
@@ -33,10 +33,6 @@ public abstract class Screen extends FrameLayout {
     }
 
     protected abstract int getLayout();
-
-    protected void setPresenter(MvpPresenter presenter) {
-        this.presenter = presenter;
-    }
 
     private void init(Context context) {
         LayoutInflater.from(context).inflate(getLayout(), this);

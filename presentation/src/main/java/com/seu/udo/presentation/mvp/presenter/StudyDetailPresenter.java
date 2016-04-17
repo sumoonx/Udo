@@ -4,7 +4,7 @@ import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.mvp.model.mapper.StudyTimeModelMapper;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
-import com.seu.udo.presentation.mvp.view.StudyDetailView;
+import com.seu.udo.presentation.mvp.view.StudyDetailMvpView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,9 +15,9 @@ import javax.inject.Inject;
  * Author: Jeremy Xu on 2016/4/10 13:53
  * E-mail: jeremy_xm@163.com
  */
-public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
+public class StudyDetailPresenter implements MvpPresenter<StudyDetailMvpView> {
 
-    private StudyDetailView studyDetailView;
+    private StudyDetailMvpView studyDetailView;
 
     private StudyTimeModelMapper studyTimeModelMapper;
     private List<StudyTimeModel> studyTimeModels;
@@ -28,7 +28,7 @@ public class StudyDetailPresenter implements MvpPresenter<StudyDetailView> {
     }
 
     @Override
-    public void takeView(StudyDetailView studyDetailView) {
+    public void takeView(StudyDetailMvpView studyDetailView) {
         this.studyDetailView = studyDetailView;
         generateAppUsages();
     }
