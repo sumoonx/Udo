@@ -1,4 +1,4 @@
-package com.seu.udo.presentation.ui.screen;
+package com.seu.udo.presentation.ui.view.screen;
 
 import android.os.Parcel;
 import android.os.Parcelable;

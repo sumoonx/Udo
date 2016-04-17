@@ -8,6 +8,7 @@ package com.seu.udo.presentation.ui.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.widget.FrameLayout;
 
 import com.seu.udo.R;
@@ -15,10 +16,10 @@ import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.mvp.DaggerService;
-import com.seu.udo.presentation.ui.activity.parceler.BasicKeyParceler;
-import com.seu.udo.presentation.ui.screen.StudyScreen;
+import com.seu.udo.presentation.ui.view.parceler.BasicKeyParceler;
+import com.seu.udo.presentation.ui.view.screen.StudyScreen;
 import com.seu.udo.presentation.ui.view.StudyDetailView;
-import com.seu.udo.presentation.ui.activity.dispatcher.StudyDispatcher;
+import com.seu.udo.presentation.ui.view.dispatcher.StudyDispatcher;
 
 import butterknife.Bind;
 import flow.Flow;
@@ -47,7 +48,7 @@ public class StudyActivity extends BaseActivity {
     }
 
     @Override
-    public Object getSystemService(String name) {
+    public Object getSystemService(@NonNull String name) {
         MortarScope studyScope = MortarScope.findChild(getApplicationContext(), getScopeName());
 
         if (studyScope == null) {

@@ -10,7 +10,7 @@ import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.mvp.presenter.StudyPresenter;
 import com.seu.udo.presentation.mvp.view.StudyMvpView;
-import com.seu.udo.presentation.ui.screen.StudyDetailScreen;
+import com.seu.udo.presentation.ui.view.screen.StudyDetailScreen;
 
 import javax.inject.Inject;
 

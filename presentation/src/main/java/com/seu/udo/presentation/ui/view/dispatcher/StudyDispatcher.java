@@ -1,4 +1,4 @@
-package com.seu.udo.presentation.ui.activity.dispatcher;
+package com.seu.udo.presentation.ui.view.dispatcher;
 
 import android.app.Activity;
 import android.support.annotation.LayoutRes;
@@ -7,8 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.seu.udo.R;
-import com.seu.udo.presentation.ui.screen.StudyDetailScreen;
-import com.seu.udo.presentation.ui.screen.StudyScreen;
+import com.seu.udo.presentation.ui.view.screen.StudyDetailScreen;
+import com.seu.udo.presentation.ui.view.screen.StudyScreen;
 
 import flow.Dispatcher;
 import flow.Traversal;

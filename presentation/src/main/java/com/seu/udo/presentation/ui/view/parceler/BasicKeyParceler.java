@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.seu.udo.presentation.ui.activity.parceler;
+package com.seu.udo.presentation.ui.view.parceler;
 
 import android.os.Parcelable;
 import android.support.annotation.NonNull;

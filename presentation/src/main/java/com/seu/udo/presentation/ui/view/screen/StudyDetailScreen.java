@@ -1,4 +1,4 @@
-package com.seu.udo.presentation.ui.screen;
+package com.seu.udo.presentation.ui.view.screen;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Author: Jeremy Xu on 2016/4/17 18:12
  * E-mail: jeremy_xm@163.com
  */
-public class StudyDetailScreen implements Parcelable {
+public final class StudyDetailScreen implements Parcelable {
     @Override
     public int describeContents() {
         return 0;
