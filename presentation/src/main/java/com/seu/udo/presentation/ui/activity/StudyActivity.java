@@ -32,10 +32,6 @@ import mortar.bundler.BundleServiceRunner;
  */
 public class StudyActivity extends BaseActivity {
 
-    @Bind(R.id.study_frame) FrameLayout container;
-
-    private StudyDetailView studyDetailContainer;
-
     public static Intent getCallingIntent(Context context) {
         return new Intent(context, StudyActivity.class);
     }
