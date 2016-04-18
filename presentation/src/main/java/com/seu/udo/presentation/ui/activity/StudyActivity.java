@@ -9,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.widget.FrameLayout;
 
 import com.seu.udo.R;
 import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
@@ -18,10 +17,8 @@ import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.ui.view.parceler.BasicKeyParceler;
 import com.seu.udo.presentation.ui.view.screen.StudyScreen;
-import com.seu.udo.presentation.ui.view.StudyDetailView;
 import com.seu.udo.presentation.ui.view.dispatcher.StudyDispatcher;
 
-import butterknife.Bind;
 import flow.Flow;
 import mortar.MortarScope;
 import mortar.bundler.BundleServiceRunner;
@@ -40,7 +37,6 @@ public class StudyActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         DaggerService.<StudyComponent>getDaggerComponent(this);
-        //initialStudyDetailContainer();
     }
 
     @Override

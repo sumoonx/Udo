@@ -5,6 +5,7 @@
 
 package com.seu.udo.presentation.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.seu.udo.R;
@@ -18,11 +19,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //startActivity(LoginActivity.getCallingIntent(this));
-        //navigator.toLogin(this);
-        //navigator.toLogin(WelcomeActivity.this);
-        navigator.toStudyDetail(WelcomeActivity.this);
-        //getApplicationComponent();
+        navigator.toStudy(WelcomeActivity.this);
         finish();
     }
 

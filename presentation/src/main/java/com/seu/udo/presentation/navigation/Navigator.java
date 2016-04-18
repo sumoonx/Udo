@@ -42,7 +42,7 @@ public class Navigator {
         }
     }
 
-    public void toStudyDetail(Context context) {
+    public void toStudy(Context context) {
         if (context != null) {
             Intent intent = StudyActivity.getCallingIntent(context);
             context.startActivity(intent);
