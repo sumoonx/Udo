@@ -19,7 +19,7 @@ public class WelcomeActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        navigator.toStudy(WelcomeActivity.this);
+        navigator.toMain(WelcomeActivity.this);
         finish();
     }
 

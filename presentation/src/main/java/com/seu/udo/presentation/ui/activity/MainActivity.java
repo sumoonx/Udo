@@ -15,7 +15,11 @@ import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.component.MainComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.mvp.DaggerService;
+import com.seu.udo.presentation.ui.view.dispatcher.MainDispatcher;
+import com.seu.udo.presentation.ui.view.parceler.BasicKeyParceler;
+import com.seu.udo.presentation.ui.view.screen.MainScreen;
 
+import butterknife.OnClick;
 import flow.Flow;
 import mortar.MortarScope;
 import mortar.bundler.BundleServiceRunner;
@@ -33,6 +37,7 @@ public class MainActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerService.<MainComponent>getDaggerComponent(this);
     }
 
     @Override
@@ -52,8 +57,11 @@ public class MainActivity extends BaseActivity {
 
     @Override
     protected void attachBaseContext(Context newBase) {
-//        newBase = Flow.configure(newBase, this)
-//                .install();
+        newBase = Flow.configure(newBase, this)
+                .dispatcher(new MainDispatcher(this))
+                .defaultKey(new MainScreen())
+                .keyParceler(new BasicKeyParceler())
+                .install();
         super.attachBaseContext(newBase);
     }
 

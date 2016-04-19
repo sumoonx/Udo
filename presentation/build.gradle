@@ -92,6 +92,7 @@ dependencies {
     compile 'com.squareup.mortar:mortar:0.20'
     compile 'com.squareup.flow:flow:1.0.0-alpha'
     compile 'com.squareup.flow:flow:1.0.0-alpha'
+    compile 'com.bigkoo:convenientbanner:2.0.5'
 
     //iconify
     compile 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2' // (v4.5)
