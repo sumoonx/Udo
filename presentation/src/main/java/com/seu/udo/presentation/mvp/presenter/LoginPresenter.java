@@ -9,7 +9,7 @@ import com.seu.udo.domain.Credential;
 import com.seu.udo.domain.interactor.DoLogin;
 import com.seu.udo.domain.response.Response;
 import com.seu.udo.lib.utils.LogUtil;
-import com.seu.udo.presentation.mvp.view.LoginMvpView;
+import com.seu.udo.presentation.mvp.view.LoginView;
 
 import javax.inject.Inject;
 
@@ -19,9 +19,9 @@ import rx.Subscriber;
  * Author: Jeremy Xu on 2016/4/5 21:05
  * E-mail: jeremy_xm@163.com
  */
-public class LoginPresenter implements MvpPresenter<LoginMvpView> {
+public class LoginPresenter implements MvpPresenter<LoginView> {
 
-    private LoginMvpView loginMvpView;
+    private LoginView loginView;
 
     private DoLogin doLoginUseCase;
 
@@ -33,48 +33,48 @@ public class LoginPresenter implements MvpPresenter<LoginMvpView> {
 
     public void doLogin(String account, String password) {
         LogUtil.i("doLogin...");
-        if (loginMvpView != null) {
-            loginMvpView.showLoading();
+        if (loginView != null) {
+            loginView.showLoading();
         }
         doLoginUseCase.credential(new Credential(account, password))
                 .execute(new DoLoginSubscriber());
     }
 
     @Override
-    public void takeView(LoginMvpView view) {
-        loginMvpView = view;
+    public void takeView(LoginView view) {
+        loginView = view;
     }
 
     @Override
     public void dropView() {
-        loginMvpView = null;
+        loginView = null;
         doLoginUseCase.unsubscribe();
     }
 
     private final class DoLoginSubscriber extends Subscriber<Response> {
         @Override
         public void onCompleted() {
-            if (loginMvpView != null) {
-                loginMvpView.hideLoading();
+            if (loginView != null) {
+                loginView.hideLoading();
             }
         }
 
         @Override
         public void onError(Throwable e) {
-            if (loginMvpView != null) {
-                loginMvpView.hideLoading();
-                loginMvpView.showError(e.getMessage());
+            if (loginView != null) {
+                loginView.hideLoading();
+                loginView.showError(e.getMessage());
             }
         }
 
         @Override
         public void onNext(Response response) {
-            if (loginMvpView != null) {
-                loginMvpView.hideLoading();
+            if (loginView != null) {
+                loginView.hideLoading();
                 if (response.isSuccess()) {
-                    loginMvpView.showSuccess();
+                    loginView.showSuccess();
                 } else {
-                    loginMvpView.showError("Login failed, please try again!");
+                    loginView.showError("Login failed, please try again!");
                 }
             }
         }

@@ -2,8 +2,8 @@ package com.seu.udo.presentation.internal.di.component;
 
 import com.seu.udo.presentation.internal.di.PerActivity;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
-import com.seu.udo.presentation.ui.view.StudyDetailView;
-import com.seu.udo.presentation.ui.view.StudyView;
+import com.seu.udo.presentation.ui.view.StudyDetailCustomView;
+import com.seu.udo.presentation.ui.view.StudyCustomView;
 
 import dagger.Component;
 
@@ -15,6 +15,6 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class,
         modules = ActivityModule.class)
 public interface StudyComponent extends ActivityComponent{
-    void inject(StudyView studyView);
-    void inject(StudyDetailView studyDetailContainer);
+    void inject(StudyCustomView studyView);
+    void inject(StudyDetailCustomView studyDetailContainer);
 }

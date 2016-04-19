@@ -8,7 +8,7 @@ import com.seu.udo.R;
 import com.seu.udo.presentation.internal.di.component.MainComponent;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.mvp.presenter.MainPresenter;
-import com.seu.udo.presentation.mvp.view.MainMvpView;
+import com.seu.udo.presentation.mvp.view.MainView;
 import com.seu.udo.presentation.navigation.Navigator;
 
 import javax.inject.Inject;
@@ -20,7 +20,7 @@ import butterknife.OnClick;
  * Author: Jeremy Xu on 2016/4/19 20:19
  * E-mail: jeremy_xm@163.com
  */
-public class MainView extends LinearLayout implements MainMvpView {
+public class MainCustomView extends LinearLayout implements MainView {
 
     private Context context;
     @Inject MainPresenter mainPresenter;
@@ -31,7 +31,7 @@ public class MainView extends LinearLayout implements MainMvpView {
         navigator.toStudy(context);
     }
 
-    public MainView(Context context, AttributeSet attrs) {
+    public MainCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }

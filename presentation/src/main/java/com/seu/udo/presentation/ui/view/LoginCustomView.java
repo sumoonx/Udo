@@ -11,7 +11,7 @@ import com.seu.udo.R;
 import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.mvp.presenter.LoginPresenter;
-import com.seu.udo.presentation.mvp.view.LoginMvpView;
+import com.seu.udo.presentation.mvp.view.LoginView;
 import com.seu.udo.presentation.mvp.DaggerService;
 
 import java.util.concurrent.TimeUnit;
@@ -25,13 +25,13 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 
 /**
- * Implementation of {@link LoginMvpView}.
+ * Implementation of {@link LoginView}.
  * You can add this layout directly into yor layout xml file.
  *
  * Author: Jeremy Xu on 2016/4/10 14:48
  * E-mail: jeremy_xm@163.com
  */
-public class LoginView extends BaseView implements LoginMvpView {
+public class LoginCustomView extends BaseView implements LoginView {
 
     /**
      * The callback to communicate with the {@link Activity}.
@@ -49,12 +49,12 @@ public class LoginView extends BaseView implements LoginMvpView {
     @Inject Activity activity;
     private LoginCallback loginCallback;
 
-    public LoginView(Context context, AttributeSet attrs) {
+    public LoginCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initialView(context);
     }
 
-    public LoginView(Context context) {
+    public LoginCustomView(Context context) {
         super(context);
         initialView(context);
     }

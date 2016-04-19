@@ -9,7 +9,7 @@ import com.seu.udo.lib.utils.LogUtil;
 import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.mvp.presenter.StudyPresenter;
-import com.seu.udo.presentation.mvp.view.StudyMvpView;
+import com.seu.udo.presentation.mvp.view.StudyView;
 import com.seu.udo.presentation.ui.view.screen.StudyDetailScreen;
 
 import javax.inject.Inject;
@@ -22,12 +22,12 @@ import flow.Flow;
  * Author: Jeremy Xu on 2016/4/17 18:16
  * E-mail: jeremy_xm@163.com
  */
-public class StudyView extends FrameLayout implements StudyMvpView {
+public class StudyCustomView extends FrameLayout implements StudyView {
 
     protected Context context;
     @Inject StudyPresenter studyPresenter;
 
-    public StudyView(Context context, AttributeSet attrs) {
+    public StudyCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }

@@ -1,6 +1,6 @@
 package com.seu.udo.presentation.mvp.presenter;
 
-import com.seu.udo.presentation.mvp.view.StudyMvpView;
+import com.seu.udo.presentation.mvp.view.StudyView;
 
 import javax.inject.Inject;
 
@@ -8,15 +8,15 @@ import javax.inject.Inject;
  * Author: Jeremy Xu on 2016/4/17 18:25
  * E-mail: jeremy_xm@163.com
  */
-public class StudyPresenter implements MvpPresenter<StudyMvpView> {
+public class StudyPresenter implements MvpPresenter<StudyView> {
 
-    private StudyMvpView studyView;
+    private StudyView studyView;
 
     @Inject
     public StudyPresenter() {}
 
     @Override
-    public void takeView(StudyMvpView studyView) {
+    public void takeView(StudyView studyView) {
         this.studyView = studyView;
     }
 

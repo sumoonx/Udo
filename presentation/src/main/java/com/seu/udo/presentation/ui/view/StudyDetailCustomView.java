@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
-import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -25,7 +24,7 @@ import com.seu.udo.presentation.internal.di.component.StudyComponent;
 import com.seu.udo.presentation.mvp.model.AppUsageModel;
 import com.seu.udo.presentation.mvp.model.StudyTimeModel;
 import com.seu.udo.presentation.mvp.presenter.StudyDetailPresenter;
-import com.seu.udo.presentation.mvp.view.StudyDetailMvpView;
+import com.seu.udo.presentation.mvp.view.StudyDetailView;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.ui.component.HourFormatter;
 import com.seu.udo.presentation.ui.component.StudyDetailMarkerView;
@@ -43,7 +42,7 @@ import butterknife.ButterKnife;
  * Author: Jeremy Xu on 2016/4/11 10:17
  * E-mail: jeremy_xm@163.com
  */
-public class StudyDetailView extends LinearLayout implements StudyDetailMvpView {
+public class StudyDetailCustomView extends LinearLayout implements StudyDetailView {
 
     private static final int LINE_CHART_ANITIME = 1500;
     private static final int PIE_CHART_ANITIME_X = 1500;
@@ -61,7 +60,7 @@ public class StudyDetailView extends LinearLayout implements StudyDetailMvpView 
     @Bind(R.id.lc_study_rank) LineChart lineChart;
     @Bind(R.id.pc_app_while_study) PieChart pieChart;
 
-    public StudyDetailView(Context context, AttributeSet attrs) {
+    public StudyDetailCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.context = context;
     }
@@ -94,7 +93,7 @@ public class StudyDetailView extends LinearLayout implements StudyDetailMvpView 
     }
 
     /**
-     * Implementation of StudyDetailMvpView.
+     * Implementation of StudyDetailView.
      * @param rank the rank to render
      */
     @Override

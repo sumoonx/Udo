@@ -17,7 +17,7 @@ import com.seu.udo.presentation.internal.di.component.LoginComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.internal.di.module.LoginModule;
 import com.seu.udo.presentation.mvp.DaggerService;
-import com.seu.udo.presentation.ui.view.LoginView;
+import com.seu.udo.presentation.ui.view.LoginCustomView;
 
 import butterknife.Bind;
 import mortar.MortarScope;
@@ -28,7 +28,7 @@ import mortar.bundler.BundleServiceRunner;
  * E-mail: jeremy_xm@163.com
  */
 public class LoginActivity extends BaseActivity {
-    private LoginView loginContainer;
+    private LoginCustomView loginContainer;
 
     @Bind(R.id.login_container) FrameLayout linearLayout;
 
@@ -50,7 +50,6 @@ public class LoginActivity extends BaseActivity {
         BundleServiceRunner.getBundleServiceRunner(this).onCreate(savedInstanceState);
         initialLoginContainer();
     }
-
 
     @Override
     public Object getSystemService(String name) {
@@ -93,10 +92,10 @@ public class LoginActivity extends BaseActivity {
 
     private void initialLoginContainer() {
         //loginContainer.inject(loginComponent);
-        loginContainer = new LoginView(this);
+        loginContainer = new LoginCustomView(this);
         linearLayout.addView(loginContainer);
         LogUtil.ai("addView loginContainer");
-        loginContainer.setLoginCallback(new LoginView.LoginCallback() {
+        loginContainer.setLoginCallback(new LoginCustomView.LoginCallback() {
             @Override
             public void onLoginSuccess() {
                 navigator.toMain(LoginActivity.this);

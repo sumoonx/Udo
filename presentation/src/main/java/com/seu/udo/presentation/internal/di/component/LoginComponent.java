@@ -3,7 +3,7 @@ package com.seu.udo.presentation.internal.di.component;
 import com.seu.udo.presentation.internal.di.PerActivity;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
 import com.seu.udo.presentation.internal.di.module.LoginModule;
-import com.seu.udo.presentation.ui.view.LoginView;
+import com.seu.udo.presentation.ui.view.LoginCustomView;
 
 import dagger.Component;
 
@@ -15,5 +15,5 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class,
         modules = {ActivityModule.class, LoginModule.class})
 public interface LoginComponent extends ActivityComponent{
-    void inject(LoginView loginContainer);
+    void inject(LoginCustomView loginContainer);
 }

@@ -2,7 +2,7 @@ package com.seu.udo.presentation.internal.di.component;
 
 import com.seu.udo.presentation.internal.di.PerActivity;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
-import com.seu.udo.presentation.ui.view.MainView;
+import com.seu.udo.presentation.ui.view.MainCustomView;
 
 import dagger.Component;
 
@@ -14,5 +14,5 @@ import dagger.Component;
 @Component(dependencies = ApplicationComponent.class,
         modules = ActivityModule.class)
 public interface MainComponent extends ActivityComponent {
-    void inject(MainView mainView);
+    void inject(MainCustomView mainView);
 }
