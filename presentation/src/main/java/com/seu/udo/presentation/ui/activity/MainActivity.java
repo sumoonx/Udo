@@ -14,9 +14,11 @@ import com.seu.udo.R;
 import com.seu.udo.presentation.internal.di.component.ApplicationComponent;
 import com.seu.udo.presentation.internal.di.component.MainComponent;
 import com.seu.udo.presentation.internal.di.module.ActivityModule;
+import com.seu.udo.presentation.internal.di.module.UserModule;
 import com.seu.udo.presentation.mvp.DaggerService;
 import com.seu.udo.presentation.ui.view.dispatcher.MainDispatcher;
 import com.seu.udo.presentation.ui.view.parceler.BasicKeyParceler;
+import com.seu.udo.presentation.ui.view.screen.LoginScreen;
 import com.seu.udo.presentation.ui.view.screen.MainScreen;
 
 import butterknife.OnClick;
@@ -49,7 +51,8 @@ public class MainActivity extends BaseActivity {
                     .withService(BundleServiceRunner.SERVICE_NAME, new BundleServiceRunner())
                     .withService(DaggerService.SERVICE_NAME, DaggerService.createComponent(MainComponent.class,
                             DaggerService.<ApplicationComponent>getDaggerComponent(getApplicationContext()),
-                            new ActivityModule(this)))
+                            new ActivityModule(this),
+                            new UserModule()))
                     .build(getScopeName());
         }
         return mainScope.hasService(name) ? mainScope.getService(name) : super.getSystemService(name);
@@ -59,10 +62,21 @@ public class MainActivity extends BaseActivity {
     protected void attachBaseContext(Context newBase) {
         newBase = Flow.configure(newBase, this)
                 .dispatcher(new MainDispatcher(this))
-                .defaultKey(new MainScreen())
+                .defaultKey(new LoginScreen())
                 .keyParceler(new BasicKeyParceler())
                 .install();
         super.attachBaseContext(newBase);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (isFinishing()) {
+            MortarScope mainScope = MortarScope.findChild(getApplicationContext(), getScopeName());
+            if (mainScope != null) {
+                mainScope.destroy();
+            }
+        }
+        super.onDestroy();
     }
 
     @Override

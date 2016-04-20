@@ -55,7 +55,7 @@ public class UdoApplication extends Application {
 
     private void initializeLeakDetection() {
         if (BuildConfig.DEBUG) {
-            LeakCanary.install(this);
+//            LeakCanary.install(this);
             LogUtil.i("LeakCanary installed.");
         }
     }

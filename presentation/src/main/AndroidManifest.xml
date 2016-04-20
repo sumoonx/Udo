@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.seu.udo">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name=".presentation.UdoApplication"
         android:allowBackup="true"
@@ -21,7 +25,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".presentation.ui.activity.MainActivity" />
-        <activity android:name=".presentation.ui.activity.LoginActivity"/>
         <activity android:name=".presentation.ui.activity.StudyActivity" />
     </application>
 

@@ -42,6 +42,8 @@ public class MainDispatcher implements Dispatcher {
         @LayoutRes final int layout;
         if (dest instanceof MainScreen) {
             layout = R.layout.main_screen;
+        } else if (dest instanceof LoginScreen) {
+            layout = R.layout.login_screen;
         } else {
             throw new AssertionError("Unrecognized screen " + dest);
         }

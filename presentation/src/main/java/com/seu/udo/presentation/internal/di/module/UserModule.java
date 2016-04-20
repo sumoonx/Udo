@@ -14,10 +14,10 @@ import dagger.Provides;
  * E-mail: jeremy_xm@163.com
  */
 @Module
-public class LoginModule {
+public class UserModule {
 
-    @Provides @PerActivity
-    @Named("doLogin") UseCase provideDoLogin(DoLogin doLogin) {
-        return doLogin;
-    }
+//    @Provides @PerActivity
+//    DoLogin provideDoLogin(DoLogin doLogin) {
+//        return doLogin;
+//    }
 }

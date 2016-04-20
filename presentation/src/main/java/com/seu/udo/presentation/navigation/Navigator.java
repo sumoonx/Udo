@@ -8,7 +8,6 @@ package com.seu.udo.presentation.navigation;
 import android.content.Context;
 import android.content.Intent;
 
-import com.seu.udo.presentation.ui.activity.LoginActivity;
 import com.seu.udo.presentation.ui.activity.MainActivity;
 import com.seu.udo.presentation.ui.activity.StudyActivity;
 
@@ -27,13 +26,6 @@ public class Navigator {
 
     @Inject
     public Navigator() {}
-
-    public void toLogin(Context context) {
-        if (context != null) {
-            Intent intent = LoginActivity.getCallingIntent(context);
-            context.startActivity(intent);
-        }
-    }
 
     public void toMain(Context context) {
         if (context != null) {

@@ -4,22 +4,26 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.github.mrengineer13.snackbar.SnackBar;
 import com.joanzapata.iconify.widget.IconTextView;
 import com.seu.udo.R;
 import com.seu.udo.lib.utils.LogUtil;
-import com.seu.udo.presentation.internal.di.component.LoginComponent;
+import com.seu.udo.presentation.internal.di.component.MainComponent;
 import com.seu.udo.presentation.mvp.presenter.LoginPresenter;
 import com.seu.udo.presentation.mvp.view.LoginView;
 import com.seu.udo.presentation.mvp.DaggerService;
+import com.seu.udo.presentation.ui.view.screen.MainScreen;
 
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import flow.Flow;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -31,32 +35,22 @@ import rx.functions.Action1;
  * Author: Jeremy Xu on 2016/4/10 14:48
  * E-mail: jeremy_xm@163.com
  */
-public class LoginCustomView extends BaseView implements LoginView {
-
-    /**
-     * The callback to communicate with the {@link Activity}.
-     * In some sense, it is much like a {@link android.view.View.OnClickListener}
-     * for a {@link android.widget.Button}.
-     */
-    public interface LoginCallback {
-        void onLoginSuccess();
-    }
+public class LoginCustomView extends FrameLayout implements LoginView {
 
     @Bind(R.id.itv_loading) IconTextView iconTextView;
     private SnackBar snackBar;
 
     @Inject LoginPresenter loginPresenter;
-    @Inject Activity activity;
-    private LoginCallback loginCallback;
 
     public LoginCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        initialView(context);
     }
 
-    public LoginCustomView(Context context) {
-        super(context);
-        initialView(context);
+    @Override
+    protected void onFinishInflate() {
+        super.onFinishInflate();
+        ButterKnife.bind(this);
+        initialView(getContext());
     }
 
     @Override
@@ -69,15 +63,7 @@ public class LoginCustomView extends BaseView implements LoginView {
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         loginPresenter.dropView();
-    }
-
-    @Override
-    protected int getLayout() {
-        return R.layout.login_screen;
-    }
-
-    public void setLoginCallback(LoginCallback loginCallback) {
-        this.loginCallback = loginCallback;
+        ButterKnife.unbind(this);
     }
 
     private boolean needShowLogin = false;
@@ -111,7 +97,7 @@ public class LoginCustomView extends BaseView implements LoginView {
     @Override
     public void showError(String message) {
         LogUtil.i("Show error: " + message);
-        snackBar = new SnackBar.Builder(activity)
+        snackBar = new SnackBar.Builder(getContext(), this)
                 .withMessage(message)
                 .withDuration(SnackBar.SHORT_SNACK)
                 .withStyle(SnackBar.Style.INFO)
@@ -130,7 +116,7 @@ public class LoginCustomView extends BaseView implements LoginView {
     @Override
     public void showSuccess() {
         LogUtil.i("Login success.");
-        loginCallback.onLoginSuccess();
+        Flow.get(this).set(new MainScreen());
     }
 
     @OnClick(R.id.bt_login_wechat)
@@ -146,7 +132,7 @@ public class LoginCustomView extends BaseView implements LoginView {
     }
 
     private void initialView(Context context) {
-        DaggerService.<LoginComponent>getDaggerComponent(context).inject(this);
+        DaggerService.<MainComponent>getDaggerComponent(context).inject(this);
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
