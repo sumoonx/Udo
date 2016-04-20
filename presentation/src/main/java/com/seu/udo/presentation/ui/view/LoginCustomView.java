@@ -1,6 +1,5 @@
 package com.seu.udo.presentation.ui.view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
@@ -23,7 +22,9 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import flow.Direction;
 import flow.Flow;
+import flow.History;
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -116,7 +117,10 @@ public class LoginCustomView extends FrameLayout implements LoginView {
     @Override
     public void showSuccess() {
         LogUtil.i("Login success.");
-        Flow.get(this).set(new MainScreen());
+        Flow flow = Flow.get(this);
+        if (!flow.goBack()) {
+            flow.replaceTop(new MainScreen(), Direction.REPLACE);
+        }
     }
 
     @OnClick(R.id.bt_login_wechat)
