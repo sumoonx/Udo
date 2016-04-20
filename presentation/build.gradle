@@ -76,6 +76,7 @@ dependencies {
     provided presentationDependencies.icepickProcessor
     compile presentationDependencies.icepick
 
+    androidTestCompile 'junit:junit:4.12'
     androidTestCompile presentationTestDependencies.mockito
     androidTestCompile presentationTestDependencies.dexmaker
     androidTestCompile presentationTestDependencies.dexmakerMockito
