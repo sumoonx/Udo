@@ -31,13 +31,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    packagingOptions {
-        exclude 'LICENSE.txt'
-        exclude 'META-INF/DEPENDENCIES'
-        exclude 'META-INF/ASL2.0'
-        exclude 'META-INF/NOTICE'
-        exclude 'META-INF/LICENSE'
-    }
+//    packagingOptions {
+//        exclude 'LICENSE.txt'
+//        exclude 'META-INF/DEPENDENCIES'
+//        exclude 'META-INF/ASL2.0'
+//        exclude 'META-INF/NOTICE'
+//        exclude 'META-INF/LICENSE'
+//    }
 
     lintOptions {
         quiet true
@@ -50,25 +50,30 @@ android {
 
 dependencies {
     compile project(':domain')
-    def dataDependencies = rootProject.ext.dataDependencies
-    def testDependencies = rootProject.ext.dataTestDependencies
     compile project(':lib')
 
-    apt dataDependencies.daggerCompiler
-    provided dataDependencies.javaxAnnotation
-    compile dataDependencies.dagger
-    compile dataDependencies.okHttp
-    compile dataDependencies.gson
-    compile dataDependencies.rxJava
-    compile dataDependencies.rxAndroid
-    compile dataDependencies.androidAnnotations
-    compile dataDependencies.retrofit
-    compile dataDependencies.retrofitConvertGson
-    compile dataDependencies.retrofitAdapterRxjava
+    apt "com.google.dagger:dagger-compiler:2.0.2"
+    compile "com.google.dagger:dagger:2.0.2"
 
-    testCompile testDependencies.junit
-    testCompile testDependencies.assertj
-    testCompile testDependencies.mockito
-    testCompile testDependencies.robolectric
+    provided  "javax.annotation:jsr250-api:1.0"
+    compile "com.squareup.okhttp:okhttp:2.5.0"
 
+    compile "com.google.code.gson:gson:2.4"
+
+    //RxJava
+    compile "io.reactivex:rxjava:1.1.0"
+    compile "io.reactivex:rxandroid:1.1.0"
+
+    compile "com.android.support:support-annotations:23.2.1"
+
+    //retrofit
+    compile "com.squareup.retrofit2:retrofit:2.0.0"
+    compile "com.squareup.retrofit2:converter-gson:2.0.0"
+    compile "com.squareup.retrofit2:adapter-rxjava:2.0.0"
+
+    //test
+    testCompile "junit:junit:4.12"
+    testCompile "org.assertj:assertj-core:1.7.1"
+    testCompile "org.mockito:mockito-core:1.9.5"
+    testCompile "org.robolectric:robolectric:3.0"
 }
