@@ -2,6 +2,7 @@ package com.seu.udo.presentation.ui.view;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
@@ -54,7 +55,6 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
     private static final float LINE_WIDTH = 2f;
 
     @Inject StudyDetailPresenter studyDetailPresenter;
-    private Context context;
 
     @Bind(R.id.tv_study_rank) TextView rankTextView;
     @Bind(R.id.lc_study_rank) LineChart lineChart;
@@ -62,14 +62,13 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
 
     public StudyDetailCustomView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.context = context;
     }
 
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
-        DaggerService.<StudyComponent>getDaggerComponent(context).inject(this);
+        DaggerService.<StudyComponent>getDaggerComponent(getContext()).inject(this);
     }
 
     /**
@@ -92,10 +91,6 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
         super.onDetachedFromWindow();
     }
 
-    /**
-     * Implementation of StudyDetailView.
-     * @param rank the rank to render
-     */
     @Override
     public void renderRank(int rank) {
         if (rank != 0) {
@@ -109,53 +104,193 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
     public void renderStudyTimes(List<StudyTimeModel> studyTimeModels) {
         lineChart.setData(getLineData(studyTimeModels));
         highlightLast();
+        resizeYLineAxis(studyTimeModels);
+        lineChart.animateX(LINE_CHART_ANITIME);
+    }
 
-        //fix y-axis size
+
+    @Override
+    public void renderAppUsages(List<AppUsageModel> appUsageModels) {
+        pieChart.setData(getPieData(appUsageModels));
+        pieChart.animateXY(PIE_CHART_ANITIME_X, PIE_CHART_ANITIME_Y);
+    }
+
+    private void setupLineChart() {
+        setupLineBorder();
+        reduceLineChart();
+        setupLineInteraction();
+        lineChart.setMarkerView(getLineMakerView());
+        setupXLineAxis();
+        setupYLineAxises();
+    }
+
+
+    private List<String> lineXString;
+
+    private LineData getLineData(List<StudyTimeModel> studyTimeModels) {
+        lineXString = new ArrayList<>();
+        for (StudyTimeModel studyTimeModel : studyTimeModels) {
+            lineXString.add(studyTimeModel.getDay());
+        }
+
+        ArrayList<ILineDataSet> lineDataSets = getLineDataSets(studyTimeModels);
+
+        LineData lineData = new LineData(lineXString, lineDataSets);
+        lineData.setHighlightEnabled(true);
+        lineData.setValueFormatter(new HourFormatter());
+        return lineData;
+    }
+
+    @NonNull
+    private ArrayList<ILineDataSet> getLineDataSets(List<StudyTimeModel> studyTimeModels) {
+        final LineDataSet lineDataSet = new LineDataSet(getYLineData(studyTimeModels), "this is study time");
+
+        lineDataSet.setColor(LINE_COLOR);
+        lineDataSet.setLineWidth(LINE_WIDTH);
+        lineDataSet.setCircleColor(Color.WHITE);
+        lineDataSet.setHighLightColor(Color.YELLOW);
+        lineDataSet.setHighlightEnabled(true);
+        lineDataSet.setDrawHorizontalHighlightIndicator(false);
+        lineDataSet.setDrawVerticalHighlightIndicator(false);
+        lineDataSet.setDrawCircleHole(true);
+        lineDataSet.setDrawCircles(true);
+        lineDataSet.setDrawValues(false);
+
+        return new ArrayList<ILineDataSet>() {{add(lineDataSet);}};
+    }
+
+    private List<Integer> pieColors;
+
+    private void setupPieChart() {
+        reducePieChart();
+        getPieColors();
+
+        pieChart.setRotationEnabled(false);
+        pieChart.setRotationAngle(0);
+        pieChart.setUsePercentValues(true);
+    }
+
+    private void reducePieChart() {
+        pieChart.setDescription("");
+        pieChart.setDrawCenterText(false);
+        pieChart.setDrawHoleEnabled(false);
+        pieChart.getLegend().setEnabled(false);
+        pieChart.setDrawSliceText(true);
+    }
+
+    private void getPieColors() {
+        pieColors = new ArrayList<>();
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_0));
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_1));
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_2));
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_3));
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_4));
+        pieColors.add(ContextCompat.getColor(getContext(), R.color.pc_study_detail_5));
+    }
+
+    private PieData getPieData(List<AppUsageModel> appUsageModels) {
+        return new PieData(getXPieValues(appUsageModels), getPieDataSet(appUsageModels));
+    }
+
+    @NonNull
+    private PieDataSet getPieDataSet(List<AppUsageModel> appUsageModels) {
+        PieDataSet result = new PieDataSet(getYPieValues(appUsageModels), "App time consume");
+        result.setSliceSpace(0f);
+        if (pieColors == null) {
+            getPieColors();
+        }
+        result.setColors(pieColors.subList(0, StudyTimeModel.BRIEF_SIZE));
+
+        result.setSelectionShift(0);
+        result.setDrawValues(false);        //hide percent values
+        result.setValueTextSize(12f);
+        return result;
+    }
+
+    @NonNull
+    private List<Entry> getYPieValues(List<AppUsageModel> appUsageModels) {
+        List<Entry> result = new ArrayList<>();
+        for (int i = 0; i < appUsageModels.size(); i++) {
+            result.add(new Entry(appUsageModels.get(i).getHour(), i));
+        }
+        return result;
+    }
+
+    @NonNull
+    private List<String> getXPieValues(List<AppUsageModel> appUsageModels) {
+        List<String> result = new ArrayList<>();
+        Collections.sort(appUsageModels);
+        Collections.reverse(appUsageModels);
+        for (AppUsageModel appUsageModel : appUsageModels) {
+            result.add(appUsageModel.getAppName());
+        }
+        return result;
+    }
+
+    private int xIndex;
+    private int dataSetIndex;
+
+    private void highlightAt(int xIndex, int dataSetIndex) {
+        this.xIndex = xIndex;
+        this.dataSetIndex = dataSetIndex;
+        lineChart.highlightValue(xIndex, dataSetIndex);
+    }
+
+    private void remainHighlight() {
+        lineChart.highlightValue(xIndex, dataSetIndex);
+    }
+
+    private void highlightLast() {
+        ILineDataSet lineDataSet = lineChart.getLineData().getDataSets().get(0);
+        xIndex = lineDataSet.getEntryCount() - 1;
+        dataSetIndex = 0;
+        remainHighlight();
+    }
+
+    private void resizeYLineAxis(@NonNull List<StudyTimeModel> studyTimeModels) {
         float min = Collections.min(studyTimeModels).getTotalHour();
         float max = Collections.max(studyTimeModels).getTotalHour();
         YAxis yAxis = lineChart.getAxisLeft();
         yAxis.calcMinMax(min, max);
-
-        lineChart.setEnabled(true);
-        lineChart.animateX(LINE_CHART_ANITIME);
     }
 
-    @Override
-    public void renderAppUsages(List<AppUsageModel> appUsageModels) {
-        PieData pieData = getPieData(appUsageModels);
-
-        pieChart.setData(pieData);
-        pieChart.setEnabled(true);
-        pieChart.animateXY(PIE_CHART_ANITIME_X, PIE_CHART_ANITIME_Y);
+    @NonNull
+    private ArrayList<Entry> getYLineData(List<StudyTimeModel> studyTimeModels) {
+        ArrayList<Entry> yValues = new ArrayList<>();
+        for (int i = 0; i < studyTimeModels.size(); i++) {
+            yValues.add(new Entry(studyTimeModels.get(i).getTotalHour(), i));
+        }
+        return yValues;
     }
 
-    /**
-     * Local methods.
-     */
-    private void setupLineChart() {
-        lineChart.setDrawBorders(true);    //hide border
-        lineChart.setBorderColor(GRID_COLOR);
-        lineChart.setBorderWidth(GRID_WIDTH);
+    private void setupYLineAxises() {
+        setupYAxis(lineChart.getAxisLeft());
+        setupYAxis(lineChart.getAxisRight());
+    }
+
+    private void reduceLineChart() {
         lineChart.setDrawGridBackground(false);
         lineChart.setDescription("");       //hide description
         lineChart.getLegend().setEnabled(false);    //hide legend
+    }
 
-        //setup x-axis
-        setupXAxis(lineChart.getXAxis());
+    private void setupLineBorder() {
+        lineChart.setDrawBorders(true);
+        lineChart.setBorderColor(GRID_COLOR);
+        lineChart.setBorderWidth(GRID_WIDTH);
+    }
 
-        //setup y-axis
-        setupYAxis(lineChart.getAxisLeft());
-        setupYAxis(lineChart.getAxisRight());
+    @NonNull
+    private StudyDetailMarkerView getLineMakerView() {
+        return new StudyDetailMarkerView(getContext(), R.layout.study_detail_marker_view);
+    }
 
-        //setup interaction
+    private void setupLineInteraction() {
         lineChart.setTouchEnabled(true);
         lineChart.setDragEnabled(false);
         lineChart.setScaleEnabled(false);
         lineChart.setPinchZoom(false);
         lineChart.setHighlightPerTapEnabled(true);
-
-        StudyDetailMarkerView markerView = new StudyDetailMarkerView(context, R.layout.study_detail_marker_view);
-        lineChart.setMarkerView(markerView);
 
         lineChart.setSelected(true);
         lineChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -172,11 +307,10 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
                 remainHighlight();
             }
         });
-
-        lineChart.setEnabled(false);        //hide self before data
     }
 
-    private void setupXAxis(XAxis xAxis) {
+    private void setupXLineAxis() {
+        XAxis xAxis = lineChart.getXAxis();
         xAxis.setDrawLabels(true);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawLimitLinesBehindData(true);
@@ -200,119 +334,5 @@ public class StudyDetailCustomView extends LinearLayout implements StudyDetailVi
         yAxis.setDrawGridLines(true);
         yAxis.setGridColor(GRID_COLOR);
         yAxis.setGridLineWidth(GRID_WIDTH);
-    }
-
-    private List<String> lineXString;
-
-    private LineData getLineData(List<StudyTimeModel> studyTimeModels) {
-        lineXString = new ArrayList<>();
-        for (StudyTimeModel studyTimeModel : studyTimeModels) {
-            lineXString.add(studyTimeModel.getDay());
-        }
-
-        ArrayList<Entry> yValues = new ArrayList<>();
-        for (int i = 0; i < studyTimeModels.size(); i++) {
-            yValues.add(new Entry(studyTimeModels.get(i).getTotalHour(), i));
-        }
-
-        LineDataSet lineDataSet = new LineDataSet(yValues, "this is study time");
-        lineDataSet.setColor(LINE_COLOR);
-        lineDataSet.setLineWidth(LINE_WIDTH);
-        lineDataSet.setCircleColor(Color.WHITE);
-        lineDataSet.setHighLightColor(Color.YELLOW);
-        lineDataSet.setHighlightEnabled(true);
-        lineDataSet.setDrawHorizontalHighlightIndicator(false);
-        lineDataSet.setDrawVerticalHighlightIndicator(false);
-        lineDataSet.setDrawCircleHole(true);
-        lineDataSet.setDrawCircles(true);
-        lineDataSet.setDrawValues(false);
-
-        ArrayList<ILineDataSet> lineDataSets = new ArrayList<>();
-        lineDataSets.add(lineDataSet);
-
-        LineData lineData = new LineData(lineXString, lineDataSets);
-        lineData.setHighlightEnabled(true);
-        lineData.setValueFormatter(new HourFormatter());
-        return lineData;
-    }
-
-    private List<Integer> pieColors;
-
-    private void setupPieChart() {
-
-        pieChart.setDescription("");    //hide description
-        pieChart.setDrawCenterText(false);
-        pieChart.setDrawHoleEnabled(false);
-        pieChart.getLegend().setEnabled(false);
-        pieChart.setDrawSliceText(true);
-
-        pieChart.setRotationEnabled(false);
-        pieChart.setRotationAngle(0);
-
-        pieChart.setUsePercentValues(true);
-
-        pieChart.setEnabled(false);
-
-        pieColors = getPieColors();
-    }
-
-    private List<Integer> getPieColors() {
-        List<Integer> pieColors = new ArrayList<>();
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_0));
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_1));
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_2));
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_3));
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_4));
-        pieColors.add(ContextCompat.getColor(context, R.color.pc_study_detail_5));
-        return pieColors;
-    }
-
-    private PieData getPieData(List<AppUsageModel> appUsageModels) {
-
-        List<String> xValues = new ArrayList<>();
-        Collections.sort(appUsageModels);
-        Collections.reverse(appUsageModels);
-        for (AppUsageModel appUsageModel : appUsageModels) {
-            xValues.add(appUsageModel.getAppName());
-        }
-
-        List<Entry> yValues = new ArrayList<>();
-        for (int i = 0; i < appUsageModels.size(); i++) {
-            yValues.add(new Entry(appUsageModels.get(i).getHour(), i));
-        }
-
-        PieDataSet pieDataSet = new PieDataSet(yValues, "App time consume");
-        pieDataSet.setSliceSpace(0f);
-        if (pieColors == null) {
-            pieColors = getPieColors();
-        }
-        pieDataSet.setColors(pieColors.subList(0, StudyTimeModel.BRIEF_SIZE));
-
-        pieDataSet.setSelectionShift(0);
-        pieDataSet.setDrawValues(false);        //hide percent values
-        pieDataSet.setValueTextSize(12f);
-
-        PieData pieData = new PieData(xValues, pieDataSet);
-        return pieData;
-    }
-
-    private int xIndex;
-    private int dataSetIndex;
-
-    private void highlightAt(int xIndex, int dataSetIndex) {
-        this.xIndex = xIndex;
-        this.dataSetIndex = dataSetIndex;
-        lineChart.highlightValue(xIndex, dataSetIndex);
-    }
-
-    private void remainHighlight() {
-        lineChart.highlightValue(xIndex, dataSetIndex);
-    }
-
-    private void highlightLast() {
-        ILineDataSet lineDataSet = lineChart.getLineData().getDataSets().get(0);
-        xIndex = lineDataSet.getEntryCount() - 1;
-        dataSetIndex = 0;
-        remainHighlight();
     }
 }
